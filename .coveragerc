@@ -1,0 +1,3 @@
+[run]
+source = blog_pyramid
+omit = blog_pyramid/test*
