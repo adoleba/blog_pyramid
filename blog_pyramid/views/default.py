@@ -16,7 +16,7 @@ def my_view(request):
     return {'one': one, 'project': 'blog_pyramid'}
 
 
-@view_config(route_name='admin', renderer='../templates/admin.jinja2')
+@view_config(route_name='admin', renderer='../templates/admin/base.jinja2')
 def admin(request):
     title = 'Admin panel'
     return {'title': title}
