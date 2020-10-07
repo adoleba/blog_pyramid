@@ -8,6 +8,5 @@ def main(global_config, **settings):
         config.include('.models')
         config.include('pyramid_jinja2')
         config.include('.routes')
-        config.include('pyramid_sacrud', route_prefix='admin')
         config.scan()
     return config.make_wsgi_app()
