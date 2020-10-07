@@ -18,6 +18,7 @@ requires = [
     'pyramid_retry',
     'pyramid_tm',
     'SQLAlchemy',
+    'slugify',
     'transaction',
     'zope.sqlalchemy',
 ]
