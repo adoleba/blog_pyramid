@@ -8,7 +8,8 @@ verify_ssl = true
 [packages]
 cookiecutter = "*"
 blog-pyramid = {editable = true,extras = ["testing"],path = "."}
-pyramid-sacrud = "0.3.3"
+pyramid-sacrud = "==0.3.3"
+slugify = "*"
 
 [requires]
 python_version = "3.8"
