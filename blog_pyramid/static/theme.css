@@ -186,6 +186,7 @@ p {
 }
  .custom-side-mini-panel ul.mini-nav > li:hover > a, .side-mini-panel ul.mini-nav > li.selected > a {
 	 border-left: 3px solid #fb9678;
+     color: #fb9678;
      background-color: white;
 }
 
