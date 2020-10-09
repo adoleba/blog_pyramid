@@ -1,5 +1,8 @@
 from pyramid.view import view_config
 
+from blog_pyramid.models import Post
+from blog_pyramid.services.posts import PostService
+
 
 class AdminViews:
     def __init__(self, request):
@@ -13,4 +16,5 @@ class AdminViews:
     @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2')
     def admin_posts(self):
         title = 'Posts list'
-        return {'title': title}
+        posts = PostService.all(request=self.request)
+        return {'title': title, 'posts': posts}

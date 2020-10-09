@@ -1,5 +1,57 @@
 {% extends  "../base.jinja2" %}
 
 {% block content %}
-    <h1>{{ title }}</h1>
+
+
+    <div class="row page-titles">
+        <div class="col-md-12">
+            <h4>{{ title }}</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" data-toggle="modal" data-target="#add-contact">Add New Post</button>
+
+                    <div class="table-responsive">
+                        <table id="demo-foo-addrow" class="table table-bordered m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Title</th>
+                                <th>Created</th>
+                                <th>Author</th>
+                                <th>Categories</th>
+                                <th>Action</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for post in posts %}
+                                <tr>
+                                    <td>{{ post.id }}</td>
+                                    <td>{{ post.title }}</td>
+                                    <td>{{ post.created.strftime('%Y-%m-%d')}}</td>
+                                    <td>{{ post.author}}</td>
+                                    <td>
+                                        {% for category in post.categories %}
+                                            {{ category }},
+                                        {% endfor %}
+                                    </td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-dark">Edit</a>
+                                    <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

@@ -13,7 +13,9 @@ def setup_models(dbsession):
 
     """
     model = models.mymodel.MyModel(name='one', value=1)
+    post = models.post.Post(title='test')
     dbsession.add(model)
+    dbsession.add(post)
 
 
 def parse_args(argv):
