@@ -18,3 +18,8 @@ class AdminViews:
         title = 'Posts list'
         posts = PostService.all(request=self.request)
         return {'title': title, 'posts': posts}
+
+    @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create.jinja2')
+    def post_create(self):
+        title = 'Create a post'
+        return {'title': title}
