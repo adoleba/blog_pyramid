@@ -15,12 +15,14 @@ posts_categories = Table('posts_categories', Base.metadata,
 
 class Category(Base):
     __tablename__ = 'category'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(20), unique=True)
     description = Column(String(100))
     created = Column(DateTime, default=datetime.datetime.utcnow)
     slug = Column(String(30), unique=True)
     posts = relationship('Post', secondary=posts_categories, back_populates='categories')
 
-    def __init__(self, name):
+    def __init__(self, name, description):
         self.slug = slugify(name)
+        self.name = name
+        self.description = description

@@ -1,0 +1,28 @@
+{% extends  "../base.jinja2" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ title }}</h4>
+                    <form class="m-t-80">
+                        <div class="row">
+
+                        {{ form | safe }}
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+<script type="text/javascript">
+    deform.load()
+</script>
