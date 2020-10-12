@@ -4,10 +4,17 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 
 from blog_pyramid.forms.post import PostForm
+from blog_pyramid.services.categories import CategoryService
 from blog_pyramid.services.posts import PostService
 
 
-class AdminViews:
+@view_config(route_name='admin', renderer='../templates/admin/base.jinja2')
+def admin(request):
+    title = 'Admin panel'
+    return {'title': title}
+
+
+class PostsViews:
     def __init__(self, request):
         self.request = request
 
@@ -17,11 +24,6 @@ class AdminViews:
         submit = deform.Button(name='Zapisz', css_class='btn btn-info')
         cancel = deform.Button(name='Anuluj', css_class='btn btn-inverse')
         return Form(post_form, buttons=(submit, cancel))
-
-    @view_config(route_name='admin', renderer='../templates/admin/base.jinja2')
-    def admin(self):
-        title = 'Admin panel'
-        return {'title': title}
 
     @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2')
     def admin_posts(self):
@@ -43,3 +45,14 @@ class AdminViews:
             return HTTPFound(location=url)
 
         return {'title': title, 'form': form}
+
+
+class CategoriesViews:
+    def __init__(self, request):
+        self.request = request
+
+    @view_config(route_name='admin_categories', renderer='../templates/admin/categories/categories_list.jinja2')
+    def admin_categories(self):
+        title = 'Categories list'
+        categories = CategoryService.all(request=self.request)
+        return {'title': title, 'categories': categories}

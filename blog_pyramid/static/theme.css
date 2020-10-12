@@ -177,7 +177,7 @@ p {
  .custom-side-mini-panel ul.mini-nav > li > a {
 	 padding: 15px 0px 14px;
 	 display: block;
-	 width: 60px;
+	 width: 240px;
 	 font-size: 18px;
 	 color: black;
 	 text-align: center;
@@ -194,7 +194,7 @@ p {
 	 padding: 0px;
 	 position: absolute;
 	 height: 100%;
-	 width: 8em;
+	 width: 240px;
 	 background: white;
 	 top: 0px;
 	 left: 60px;
