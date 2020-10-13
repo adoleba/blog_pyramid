@@ -7,3 +7,5 @@ def includeme(config):
     config.add_route('admin_categories', '/admin/categories')
     config.add_route('category_create', '/admin/categories/create')
     config.add_route('category_edit', '/admin/categories/{slug}/edit')
+    config.add_route('category_delete', '/admin/categories/{slug}/delete')
+    config.add_route('category_delete_confirmed', '/admin/categories/{slug}/delete/confirmed')

@@ -114,3 +114,17 @@ class CategoriesViews:
 
         return {'title': title, 'form': form, 'url': url}
 
+    @view_config(route_name='category_delete', renderer='../templates/admin/categories/category_delete.jinja2')
+    def category_delete(self):
+        title = 'Delete category'
+        slug = self.request.matchdict['slug']
+        category = self.request.dbsession.query(Category).filter_by(slug=slug).one()
+
+        return {'title': title, 'category': category}
+
+    @view_config(route_name='category_delete_confirmed', renderer='../templates/admin/categories/category_delete.jinja2')
+    def category_delete_confirmed(self):
+        slug = self.request.matchdict['slug']
+        self.request.dbsession.query(Category).filter(Category.slug == slug).delete()
+
+        return HTTPFound(location=self.request.route_url('admin_categories'))
