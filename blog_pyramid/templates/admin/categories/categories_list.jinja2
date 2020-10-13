@@ -13,7 +13,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" data-toggle="modal" data-target="#add-contact">Add New Category</button>
+                    <a href="{{ request.route_url('category_create') }}" class="btn btn-info btn-rounded m-t-10 float-right">Add New Category</a>
 
                     <div class="table-responsive">
                         <table id="demo-foo-addrow" class="table table-bordered m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">

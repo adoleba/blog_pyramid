@@ -68,7 +68,7 @@ class CategoriesViews:
         categories = CategoryService.all(request=self.request)
         return {'title': title, 'categories': categories}
 
-    @view_config(route_name='category_create', renderer='../templates/admin/categories/category_create.jinja2')
+    @view_config(route_name='category_create', renderer='../templates/admin/categories/category_create_edit.jinja2')
     def category_create(self):
         title = 'Create a category'
 
@@ -83,5 +83,8 @@ class CategoriesViews:
 
             url = self.request.route_url('admin_categories')
             return HTTPFound(location=url)
+
+        if 'Cancel' in self.request.params:
+            return HTTPFound(location=self.request.route_url('admin_categories'))
 
         return {'title': title, 'form': form}
