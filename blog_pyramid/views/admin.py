@@ -1,4 +1,5 @@
 import datetime
+import transaction
 
 import deform
 from deform import Form
@@ -88,3 +89,28 @@ class CategoriesViews:
             return HTTPFound(location=self.request.route_url('admin_categories'))
 
         return {'title': title, 'form': form}
+
+    @view_config(route_name='category_edit', renderer='../templates/admin/categories/category_create_edit.jinja2')
+    def category_edit(self):
+        title = 'Edit a category'
+
+        slug = self.request.matchdict['slug']
+        category = self.request.dbsession.query(Category).filter_by(slug=slug).one()
+        category_as_dict = category.__dict__
+        form = self.category_form.render(appstruct=category_as_dict)
+        url = self.request.route_url('category_edit', slug=category.slug)
+
+        if 'Save' in self.request.params:
+            new_category_name = self.request.params.get('name')
+            new_category_description = self.request.params.get('description')
+            self.request.dbsession.query(Category).filter(Category.slug == slug)\
+                .update({'name': new_category_name, 'description': new_category_description})
+
+            url = self.request.route_url('admin_categories')
+            return HTTPFound(location=url)
+
+        if 'Cancel' in self.request.params:
+            return HTTPFound(location=self.request.route_url('admin_categories'))
+
+        return {'title': title, 'form': form, 'url': url}
+

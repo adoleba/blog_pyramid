@@ -6,3 +6,4 @@ def includeme(config):
     config.add_route('post_create', '/admin/posts/create')
     config.add_route('admin_categories', '/admin/categories')
     config.add_route('category_create', '/admin/categories/create')
+    config.add_route('category_edit', '/admin/categories/{slug}/edit')
