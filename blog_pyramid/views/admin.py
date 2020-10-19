@@ -41,7 +41,7 @@ class PostsViews:
         posts = PostService.all(request=self.request)
         return {'title': title, 'posts': posts}
 
-    @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create.jinja2')
+    @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create_edit.jinja2')
     def post_create(self):
         title = 'Create a post'
         form = self.post_form.render()
@@ -62,6 +62,18 @@ class PostsViews:
             return HTTPFound(location=self.request.route_url('admin_posts'))
 
         return {'title': title, 'form': form}
+
+    @view_config(route_name='post_edit', renderer='../templates/admin/posts/post_create_edit.jinja2')
+    def post_edit(self):
+        title = 'Edit a post'
+
+        return {'title': title}
+
+    @view_config(route_name='post_delete', renderer='../templates/admin/posts/post_delete.jinja2')
+    def post_delete(self):
+        title = 'Delete a post'
+
+        return {'title': title}
 
 
 class CategoriesViews:

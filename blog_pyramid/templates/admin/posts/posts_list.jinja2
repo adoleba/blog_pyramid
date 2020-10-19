@@ -13,7 +13,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" data-toggle="modal" data-target="#add-contact">Add New Post</button>
+                    <a href="{{ request.route_url('post_create') }}" class="btn btn-info btn-rounded m-t-10 float-right">Add New Post</a>
 
                     <div class="table-responsive">
                         <table id="demo-foo-addrow" class="table table-bordered m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
@@ -23,7 +23,7 @@
                                 <th>Title</th>
                                 <th>Created</th>
                                 <th>Author</th>
-                                <th>Categories</th>
+                                <th>Category</th>
                                 <th>Action</th>
 
                             </tr>
@@ -37,8 +37,8 @@
                                     <td>{{ post.author}}</td>
                                     <td>{{ post.category }}</td>
                                 <td>
-                                    <a href="#" class="btn btn-sm btn-dark">Edit</a>
-                                    <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                                    <a href="{{ request.route_url('post_edit', slug=post.slug) }}" class="btn btn-sm btn-dark">Edit</a>
+                                    <a href="{{ request.route_url('post_delete', slug=post.slug) }}" class="btn btn-sm btn-danger">Delete</a>
                                 </tr>
                             {% endfor %}
 
