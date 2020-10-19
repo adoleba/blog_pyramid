@@ -10,6 +10,6 @@ def validate_unique_name(node, appstruct, dbsession):
 
 
 class CategoryForm(colander.MappingSchema):
-    name = colander.SchemaNode(colander.String())
-    description = colander.SchemaNode(colander.String(), validator=colander.Length(max=100), widget=deform.widget.TextAreaWidget())
+    name = colander.SchemaNode(colander.String(), validator=colander.Length(min=3, max=20))
+    description = colander.SchemaNode(colander.String(), validator=colander.Length(min=10, max=100), widget=deform.widget.TextAreaWidget())
 
