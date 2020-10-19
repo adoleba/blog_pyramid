@@ -35,11 +35,7 @@
                                     <td>{{ post.title }}</td>
                                     <td>{{ post.created.strftime('%Y-%m-%d')}}</td>
                                     <td>{{ post.author}}</td>
-                                    <td>
-                                        {% for category in post.categories %}
-                                            {{ category }},
-                                        {% endfor %}
-                                    </td>
+                                    <td>{{ post.category }}</td>
                                 <td>
                                     <a href="#" class="btn btn-sm btn-dark">Edit</a>
                                     <a href="#" class="btn btn-sm btn-danger">Delete</a>

@@ -11,7 +11,8 @@ from pyramid.view import view_config
 from slugify import slugify
 
 from blog_pyramid.forms.category import CategoryForm, validate_unique_name
-from blog_pyramid.forms.post import PostForm
+from blog_pyramid.forms.post import get_post_form
+from blog_pyramid.models import Post
 from blog_pyramid.models.category import Category
 from blog_pyramid.services.categories import CategoryService
 from blog_pyramid.services.posts import PostService
@@ -29,9 +30,9 @@ class PostsViews:
 
     @property
     def post_form(self):
-        post_form = PostForm()
-        submit = deform.Button(name='Zapisz', css_class='btn btn-info')
-        cancel = deform.Button(name='Anuluj', css_class='btn btn-inverse')
+        post_form = get_post_form(self.request.dbsession)
+        submit = deform.Button(name='Create', css_class='btn btn-info')
+        cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
         return Form(post_form, buttons=(submit, cancel))
 
     @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2')
@@ -45,13 +46,20 @@ class PostsViews:
         title = 'Create a post'
         form = self.post_form.render()
 
-        if 'Zapisz' in self.request.params:
+        if 'Create' in self.request.params:
             post_title = self.request.params.get('title')
             post_intro = self.request.params.get('intro')
             post_body = self.request.params.get('body')
-            post_category = self.request.params.get('categories')
+            post_category = self.request.params.get('category')
+
+            new_post = Post(title=post_title, intro=post_intro, body=post_body, category=post_category)
+            self.request.dbsession.add(new_post)
+
             url = self.request.route_url('admin_posts')
             return HTTPFound(location=url)
+
+        if 'Cancel' in self.request.params:
+            return HTTPFound(location=self.request.route_url('admin_posts'))
 
         return {'title': title, 'form': form}
 

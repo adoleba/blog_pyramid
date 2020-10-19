@@ -19,7 +19,12 @@ class Post(Base):
     slug = Column(String(40), unique=True)
     author = relationship('User', back_populates='posts')
     author_username = Column(String, ForeignKey('user.username'))
+    category = Column(String(30))
     categories = relationship('Category', secondary=posts_categories, back_populates='posts')
 
-    def __init__(self, title):
+    def __init__(self, title, intro, body, category):
         self.slug = slugify(title)
+        self.title = title
+        self.intro = intro
+        self.body = body
+        self.category = category
