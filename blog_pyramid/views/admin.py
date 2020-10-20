@@ -82,13 +82,21 @@ class PostsViews:
             new_post_category = self.request.params.get('category')
             edited = datetime.datetime.utcnow()
             new_post_slug = slugify(new_post_title)
+            controls = self.request.POST.items()
+            form_to_validate = self.post_form
 
-            self.request.dbsession.query(Post).filter(Post.slug == slug) \
+            try:
+                form_to_validate.validate(controls)
+
+                self.request.dbsession.query(Post).filter(Post.slug == slug) \
                 .update({'slug': new_post_slug, 'title': new_post_title, 'intro': new_post_intro, 'body': new_post_body,
                          'category': new_post_category, 'edited': edited})
 
-            url = self.request.route_url('admin_posts')
-            return HTTPFound(location=url)
+                url = self.request.route_url('admin_posts')
+                return HTTPFound(location=url)
+
+            except ValidationFailure as e:
+                return {'form': e.render()}
 
         if 'Cancel' in self.request.params:
             return HTTPFound(location=self.request.route_url('admin_posts'))
@@ -170,11 +178,19 @@ class CategoriesViews:
             new_category_name = self.request.params.get('name')
             new_category_description = self.request.params.get('description')
             new_category_slug = slugify(new_category_name)
-            self.request.dbsession.query(Category).filter(Category.slug == slug)\
+            controls = self.request.POST.items()
+            form_to_validate = self.category_form
+
+            try:
+                form_to_validate.validate(controls)
+                self.request.dbsession.query(Category).filter(Category.slug == slug)\
                 .update({'slug': new_category_slug, 'description': new_category_description, 'name': new_category_name})
 
-            url = self.request.route_url('admin_categories')
-            return HTTPFound(location=url)
+                url = self.request.route_url('admin_categories')
+                return HTTPFound(location=url)
+
+            except ValidationFailure as e:
+                return {'form': e.render()}
 
         if 'Cancel' in self.request.params:
             return HTTPFound(location=self.request.route_url('admin_categories'))
