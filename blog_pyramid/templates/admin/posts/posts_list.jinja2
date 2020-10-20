@@ -16,7 +16,17 @@
                     <a href="{{ request.route_url('post_create') }}" class="btn btn-info btn-rounded m-t-10 float-right">Add New Post</a>
 
                     <div class="table-responsive">
-                        <table id="demo-foo-addrow" class="table table-bordered m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
+                        <table id="demo-foo-addrow" class="table table-bordered m-t-30 table-hover contact-list" style="width: 100%">
+
+                            <colgroup>
+                                <col span="1" style="width: 3%;">
+                                <col span="1" style="width: 31%;">
+                                <col span="1" style="width: 15%;">
+                                <col span="1" style="width: 15%;">
+                                <col span="1" style="width: 10%;">
+                                <col span="1" style="width: 10%;">
+                                <col span="1" style="width: 16%;">
+                            </colgroup>
                             <thead>
                             <tr>
                                 <th>Id</th>
