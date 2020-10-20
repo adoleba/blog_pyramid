@@ -1,9 +1,20 @@
 from blog_pyramid.models.post import Post
+import paginate_sqlalchemy
 
 
 class PostService:
 
     @classmethod
     def all(cls, request):
-        query = request.dbsession.query(Post)
-        return query.order_by(-Post.created)
+        return request.dbsession.query(Post).order_by(Post.created.desc())
+
+    @classmethod
+    def get_paginator(cls, request, page=1):
+        query = request.dbsession.query(Post).order_by(Post.created.desc())
+        query_params = request.GET.mixed()
+
+        def url_maker(link_page):
+            query_params['page'] = link_page
+            return request.current_route_url(_query=query_params)
+
+        return paginate_sqlalchemy.SqlalchemyOrmPage(query, page, items_per_page=3, url_maker=url_maker)

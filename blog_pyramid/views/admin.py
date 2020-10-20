@@ -35,8 +35,9 @@ class PostsViews:
     @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2')
     def admin_posts(self):
         title = 'Posts list'
-        posts = PostService.all(request=self.request)
-        return {'title': title, 'posts': posts}
+        page = int(self.request.params.get('page', 1))
+        paginator = PostService.get_paginator(request=self.request, page=page)
+        return {'title': title, 'paginator': paginator}
 
     @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create_edit.jinja2')
     def post_create(self):
