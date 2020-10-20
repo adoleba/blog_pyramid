@@ -11,3 +11,4 @@ def includeme(config):
     config.add_route('post_create', '/admin/posts/create')
     config.add_route('post_edit', '/admin/posts/{slug}/edit')
     config.add_route('post_delete', '/admin/posts/{slug}/delete')
+    config.add_route('post_delete_confirmed', '/admin/posts/{slug}/delete/confirmed')

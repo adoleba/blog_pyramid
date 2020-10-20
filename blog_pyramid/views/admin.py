@@ -91,9 +91,18 @@ class PostsViews:
 
     @view_config(route_name='post_delete', renderer='../templates/admin/posts/post_delete.jinja2')
     def post_delete(self):
-        title = 'Delete a post'
+        title = 'Delete post'
+        slug = self.request.matchdict['slug']
+        post = self.request.dbsession.query(Post).filter_by(slug=slug).one()
 
-        return {'title': title}
+        return {'title': title, 'post': post}
+
+    @view_config(route_name='post_delete_confirmed', renderer='../templates/admin/categories/category_delete.jinja2')
+    def post_delete_confirmed(self):
+        slug = self.request.matchdict['slug']
+        self.request.dbsession.query(Post).filter(Post.slug == slug).delete()
+
+        return HTTPFound(location=self.request.route_url('admin_posts'))
 
 
 class CategoriesViews:
