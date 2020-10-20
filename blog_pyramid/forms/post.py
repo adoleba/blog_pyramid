@@ -17,8 +17,9 @@ def validate_unique_title(node, appstruct, dbsession):
 
 def get_post_form(dbsession, validator):
     class PostForm(colander.MappingSchema):
-        title = colander.SchemaNode(colander.String(), title="Tytuł", validator=colander.Length(min=3, max=30))
-        intro = colander.SchemaNode(colander.String(), title="Intro", validator=colander.Length(min=10, max=100))
+        title = colander.SchemaNode(colander.String(), title="Tytuł", validator=colander.Length(min=3, max=60))
+        intro = colander.SchemaNode(colander.String(), title="Intro", widget=deform.widget.TextAreaWidget(),
+                                    validator=colander.Length(min=10, max=200))
         body = colander.SchemaNode(colander.String(), title="Treść", widget=deform.widget.RichTextWidget(),
                                    validator=colander.Length(min=50))
         category = colander.SchemaNode(

@@ -9,15 +9,19 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ request.static_url('blog_pyramid:static/assets/images/favicon.png') }}">
+
     <title>Elite Admin Template - The Ultimate Multipurpose admin template</title>
     <link href="{{ request.static_url('blog_pyramid:static/theme.css')}}" rel="stylesheet">
     <link href="{{ request.static_url('blog_pyramid:static/css/style.min.css')}}" rel="stylesheet">
-
+    <link href="{{ request.static_url('deform:static/css/form.css') }}" rel="stylesheet" >
     <link href="{{ request.static_url('blog_pyramid:static/assets/node_modules/footable/css/footable.bootstrap.min.css') }}" rel="stylesheet">
 
 
     <link href="{{ request.static_url('blog_pyramid:static/css/pages/footable-page.css" rel="stylesheet') }}">
     <link href="{{ request.static_url('blog_pyramid:static/css/pages/other-pages.css" rel="stylesheet') }}">
+
+    <script type="text/javascript" src="{{ request.static_url('deform:static/scripts/jquery-2.0.3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ request.static_url('deform:static/scripts/deform.js') }}"></script>
 
 
 </head>
@@ -37,6 +41,10 @@
         </div>
 
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.5.6/tinymce.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/tinymce/4.5.6/jquery.tinymce.min.js"></script>
 
     <script src="{{ request.static_url('blog_pyramid:static/assets/node_modules/jquery/jquery-3.2.1.min.js') }}"></script>
     <!-- Bootstrap tether Core JavaScript -->
