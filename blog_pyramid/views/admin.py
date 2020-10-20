@@ -41,24 +41,30 @@ class PostsViews:
     @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create_edit.jinja2')
     def post_create(self):
         title = 'Create a post'
-        form = self.post_form.render()
+        form = self.post_form
 
         if 'Save' in self.request.params:
             post_title = self.request.params.get('title')
             post_intro = self.request.params.get('intro')
             post_body = self.request.params.get('body')
             post_category = self.request.params.get('category')
+            controls = self.request.POST.items()
 
-            new_post = Post(title=post_title, intro=post_intro, body=post_body, category=post_category)
-            self.request.dbsession.add(new_post)
+            try:
+                form.validate(controls)
+                new_post = Post(title=post_title, intro=post_intro, body=post_body, category=post_category)
+                self.request.dbsession.add(new_post)
 
-            url = self.request.route_url('admin_posts')
-            return HTTPFound(location=url)
+                url = self.request.route_url('admin_posts')
+                return HTTPFound(location=url)
+
+            except ValidationFailure as e:
+                return {'form': e.render()}
 
         if 'Cancel' in self.request.params:
             return HTTPFound(location=self.request.route_url('admin_posts'))
 
-        return {'title': title, 'form': form}
+        return {'title': title, 'form': form.render()}
 
     @view_config(route_name='post_edit', renderer='../templates/admin/posts/post_create_edit.jinja2')
     def post_edit(self):
@@ -111,7 +117,7 @@ class CategoriesViews:
 
     @property
     def category_form(self):
-        category_form = CategoryForm(validator=partial(validate_unique_name, dbsession=self.request.dbsession)).bind(request=self.request) # validator = partial(validate_unique_name, dbsession)
+        category_form = CategoryForm(validator=partial(validate_unique_name, dbsession=self.request.dbsession)).bind(request=self.request)
         submit = deform.Button(name='Save', css_class='btn btn-info')
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
         return Form(category_form, buttons=(submit, cancel, ))
