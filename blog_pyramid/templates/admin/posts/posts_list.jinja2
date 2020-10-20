@@ -22,6 +22,7 @@
                                 <th>Id</th>
                                 <th>Title</th>
                                 <th>Created</th>
+                                <th>Edited</th>
                                 <th>Author</th>
                                 <th>Category</th>
                                 <th>Action</th>
@@ -34,6 +35,7 @@
                                     <td>{{ post.id }}</td>
                                     <td>{{ post.title }}</td>
                                     <td>{{ post.created.strftime('%Y-%m-%d')}}</td>
+                                    <td>{{ post.edited.strftime('%Y-%m-%d')}}</td>
                                     <td>{{ post.author}}</td>
                                     <td>{{ post.category }}</td>
                                 <td>

@@ -1,9 +1,6 @@
 import datetime
 from functools import partial
 
-import colander
-import transaction
-
 import deform
 from deform import Form, ValidationFailure
 from pyramid.httpexceptions import HTTPFound
@@ -31,7 +28,7 @@ class PostsViews:
     @property
     def post_form(self):
         post_form = get_post_form(self.request.dbsession)
-        submit = deform.Button(name='Create', css_class='btn btn-info')
+        submit = deform.Button(name='Save', css_class='btn btn-info')
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
         return Form(post_form, buttons=(submit, cancel))
 
@@ -46,7 +43,7 @@ class PostsViews:
         title = 'Create a post'
         form = self.post_form.render()
 
-        if 'Create' in self.request.params:
+        if 'Save' in self.request.params:
             post_title = self.request.params.get('title')
             post_intro = self.request.params.get('intro')
             post_body = self.request.params.get('body')
@@ -66,8 +63,31 @@ class PostsViews:
     @view_config(route_name='post_edit', renderer='../templates/admin/posts/post_create_edit.jinja2')
     def post_edit(self):
         title = 'Edit a post'
+        slug = self.request.matchdict['slug']
+        post = self.request.dbsession.query(Post).filter_by(slug=slug).one()
+        post_as_dict = post.__dict__
+        form = self.post_form.render(appstruct=post_as_dict)
+        url = self.request.route_url('post_edit', slug=post.slug)
 
-        return {'title': title}
+        if 'Save' in self.request.params:
+            new_post_title = self.request.params.get('title')
+            new_post_intro = self.request.params.get('intro')
+            new_post_body = self.request.params.get('body')
+            new_post_category = self.request.params.get('category')
+            edited = datetime.datetime.utcnow()
+            new_post_slug = slugify(new_post_title)
+
+            self.request.dbsession.query(Post).filter(Post.slug == slug) \
+                .update({'slug': new_post_slug, 'title': new_post_title, 'intro': new_post_intro, 'body': new_post_body,
+                         'category': new_post_category, 'edited': edited})
+
+            url = self.request.route_url('admin_posts')
+            return HTTPFound(location=url)
+
+        if 'Cancel' in self.request.params:
+            return HTTPFound(location=self.request.route_url('admin_posts'))
+
+        return {'title': title, 'form': form, 'url': url}
 
     @view_config(route_name='post_delete', renderer='../templates/admin/posts/post_delete.jinja2')
     def post_delete(self):
