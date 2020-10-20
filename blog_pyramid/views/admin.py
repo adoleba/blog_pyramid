@@ -8,7 +8,7 @@ from pyramid.view import view_config
 from slugify import slugify
 
 from blog_pyramid.forms.category import CategoryForm, validate_unique_name
-from blog_pyramid.forms.post import get_post_form
+from blog_pyramid.forms.post import get_post_form, validate_unique_title
 from blog_pyramid.models import Post
 from blog_pyramid.models.category import Category
 from blog_pyramid.services.categories import CategoryService
@@ -27,7 +27,7 @@ class PostsViews:
 
     @property
     def post_form(self):
-        post_form = get_post_form(self.request.dbsession)
+        post_form = get_post_form(self.request.dbsession, validator=partial(validate_unique_title, dbsession=self.request.dbsession)).bind(request=self.request)
         submit = deform.Button(name='Save', css_class='btn btn-info')
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
         return Form(post_form, buttons=(submit, cancel))
