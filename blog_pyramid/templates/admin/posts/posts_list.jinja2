@@ -28,13 +28,14 @@
                                 <col span="1" style="width: 20%;">
                             </colgroup>
                             <thead>
-                                <td>Title</td>
-                                <td>Created</td>
-                                <td>Edited</td>
-                                <td>Author</td>
-                                <td>Category</td>
-                                <td>Action</td>
-
+                                <tr>
+                                    <td>Title</td>
+                                    <td>Created</td>
+                                    <td>Edited</td>
+                                    <td>Author</td>
+                                    <td>Category</td>
+                                    <td>Action</td>
+                                </tr>
                             </thead>
                             <tbody>
                             {% for post in paginator.items %}
@@ -52,14 +53,14 @@
 
                             </tbody>
                         </table>
-                    </div>
 
                         {{ paginator.pager() |safe }}
 
-                {% else %}
-                    <p>No blog entries found.</p>
-                {% endif %}
+                    {% else %}
+                        <p>No posts found.</p>
+                    {% endif %}
 
+                    </div>
                 </div>
             </div>
         </div>

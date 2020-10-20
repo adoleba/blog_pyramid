@@ -134,8 +134,9 @@ class CategoriesViews:
     @view_config(route_name='admin_categories', renderer='../templates/admin/categories/categories_list.jinja2')
     def admin_categories(self):
         title = 'Categories list'
-        categories = CategoryService.all(request=self.request)
-        return {'title': title, 'categories': categories}
+        page = int(self.request.params.get('page', 1))
+        paginator = CategoryService.get_paginator(request=self.request, page=page)
+        return {'title': title, 'paginator': paginator}
 
     @view_config(route_name='category_create', renderer='../templates/admin/categories/category_create_edit.jinja2')
     def category_create(self):

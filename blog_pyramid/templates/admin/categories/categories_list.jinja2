@@ -16,10 +16,10 @@
                     <a href="{{ request.route_url('category_create') }}" class="btn btn-info btn-rounded m-t-10 float-right">Add New Category</a>
 
                     <div class="table-responsive">
+                    {% if paginator.items %}
                         <table id="demo-foo-addrow" class="table table-bordered m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
                             <thead>
                             <tr>
-                                <th>Id</th>
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Created</th>
@@ -27,9 +27,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for category in categories %}
+                            {% for category in paginator.items %}
                                 <tr>
-                                    <td>{{ category.id }}</td>
                                     <td>{{ category.name }}</td>
                                     <td>{{ category.description}}</td>
                                     <td>{{ category.created.strftime('%Y-%m-%d')}}</td>
@@ -41,6 +40,13 @@
 
                             </tbody>
                         </table>
+
+                        {{ paginator.pager() |safe }}
+
+                    {% else %}
+                        <p>No categories found.</p>
+                    {% endif %}
+
                     </div>
                 </div>
             </div>
