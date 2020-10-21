@@ -4,6 +4,7 @@ def includeme(config):
     config.add_route('admin', '/admin')
     config.add_route('admin_posts', '/admin/posts')
     config.add_route('admin_categories', '/admin/categories')
+    config.add_route('admin_users', '/admin/users')
     config.add_route('category_create', '/admin/categories/create')
     config.add_route('category_edit', '/admin/categories/{slug}/edit')
     config.add_route('category_delete', '/admin/categories/{slug}/delete')
@@ -12,3 +13,4 @@ def includeme(config):
     config.add_route('post_edit', '/admin/posts/{slug}/edit')
     config.add_route('post_delete', '/admin/posts/{slug}/delete')
     config.add_route('post_delete_confirmed', '/admin/posts/{slug}/delete/confirmed')
+    config.add_route('user_register', '/admin/users/register')

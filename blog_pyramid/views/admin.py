@@ -213,3 +213,20 @@ class CategoriesViews:
         self.request.dbsession.query(Category).filter(Category.slug == slug).delete()
 
         return HTTPFound(location=self.request.route_url('admin_categories'))
+
+
+class UserViews:
+    def __init__(self, request):
+        self.request = request
+
+    @view_config(route_name='admin_users', renderer='../templates/admin/users/users_list.jinja2')
+    def admin_users(self):
+        title = 'Users list'
+        return {'title': title}
+
+    @view_config(route_name='user_register', renderer='../templates/admin/users/user_create_edit.jinja2')
+    def user_register(self):
+        title = 'Register new user'
+        return {'title': title}
+
+
