@@ -9,6 +9,7 @@ from slugify import slugify
 
 from blog_pyramid.forms.category import CategoryForm, validate_unique_name
 from blog_pyramid.forms.post import get_post_form, validate_unique_title
+from blog_pyramid.forms.user import RegisterForm
 from blog_pyramid.models import Post
 from blog_pyramid.models.category import Category
 from blog_pyramid.services.categories import CategoryService
@@ -227,6 +228,7 @@ class UserViews:
     @view_config(route_name='user_register', renderer='../templates/admin/users/user_create_edit.jinja2')
     def user_register(self):
         title = 'Register new user'
-        return {'title': title}
+        form = RegisterForm()
+        return {'title': title, 'form': form}
 
 
