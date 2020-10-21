@@ -9,7 +9,7 @@ from slugify import slugify
 
 from blog_pyramid.forms.category import CategoryForm, validate_unique_name
 from blog_pyramid.forms.post import get_post_form, validate_unique_title
-from blog_pyramid.forms.user import get_user_form
+from blog_pyramid.forms.user import get_user_register_form, UserEditForm
 from blog_pyramid.models import Post, User
 from blog_pyramid.models.category import Category
 from blog_pyramid.services.categories import CategoryService
@@ -227,10 +227,10 @@ class UserViews:
         users = UserService.all(request=self.request)
         return {'title': title, 'users': users}
 
-    @view_config(route_name='user_register', renderer='../templates/admin/users/user_create_edit.jinja2')
+    @view_config(route_name='user_register', renderer='../templates/admin/users/user_register.jinja2')
     def user_register(self):
         title = 'Register new user'
-        form = get_user_form(self.request.POST, self.request.dbsession)
+        form = get_user_register_form(self.request.POST, self.request.dbsession)
         if self.request.method == "POST" and form.validate():
             new_user = User(username=form.username.data, email=form.email.data, firstname=form.firstname.data,
                             lastname=form.lastname.data, about=form.about.data)
@@ -238,3 +238,26 @@ class UserViews:
             self.request.dbsession.add(new_user)
             return HTTPFound(location=self.request.route_url('admin_users'))
         return {'title': title, 'form': form}
+
+    @view_config(route_name='user_edit', renderer='../templates/admin/users/user_edit.jinja2')
+    def user_edit(self):
+        title = 'Edit user'
+        form = UserEditForm(self.request.POST)
+        username = self.request.matchdict['username']
+
+        user = self.request.dbsession.query(User).filter_by(username=username).one()
+        form.lastname.data = user.lastname
+        form.firstname.data = user.firstname
+        form.about.data = user.about
+
+        if self.request.method == "POST" and form.validate():
+            new_lastname = self.request.params.get('lastname')
+            new_about = self.request.params.get('about')
+            new_firstname = self.request.params.get('firstname')
+
+            self.request.dbsession.query(User).filter(User.username == username) \
+                .update({'firstname': new_firstname, 'lastname': new_lastname, 'about': new_about})
+
+            return HTTPFound(location=self.request.route_url('admin_users'))
+
+        return {'title': title, 'form': form, 'username': username}

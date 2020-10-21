@@ -2,7 +2,7 @@ from wtforms import Form, StringField, PasswordField, validators, TextAreaField,
 from blog_pyramid.models import User
 
 
-def get_user_form(postdata, dbsession):
+def get_user_register_form(postdata, dbsession):
     def validate_username(form, field):
         if dbsession.query(User).filter_by(username=field.data).first():
             raise ValidationError('Username already exists')
@@ -21,3 +21,9 @@ def get_user_form(postdata, dbsession):
         lastname = StringField('Lastname', [validators.Length(min=3, max=20)])
         about = TextAreaField('About user', [validators.Length(min=10)])
     return RegisterForm(postdata)
+
+
+class UserEditForm(Form):
+    firstname = StringField('Firstname', [validators.Length(min=3, max=20)])
+    lastname = StringField('Lastname', [validators.Length(min=3, max=20)])
+    about = TextAreaField('About user', [validators.Length(min=10)])

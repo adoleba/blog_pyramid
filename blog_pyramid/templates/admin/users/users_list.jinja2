@@ -37,8 +37,7 @@
                                 <td>{{ user.lastname }}</td>
                                 <td>{{ user.created.strftime('%Y-%m-%d')}}</td>
                                 <td>
-                                    <a href="#" class="btn btn-sm btn-dark">Edit</a>
-                                    <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                                    <a href="{{ request.route_url('user_edit', username=user.username) }}" class="btn btn-sm btn-dark">Edit</a>
                             </tr>
                         {% endfor %}
 
