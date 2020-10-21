@@ -10,10 +10,11 @@ from slugify import slugify
 from blog_pyramid.forms.category import CategoryForm, validate_unique_name
 from blog_pyramid.forms.post import get_post_form, validate_unique_title
 from blog_pyramid.forms.user import RegisterForm
-from blog_pyramid.models import Post
+from blog_pyramid.models import Post, User
 from blog_pyramid.models.category import Category
 from blog_pyramid.services.categories import CategoryService
 from blog_pyramid.services.posts import PostService
+from blog_pyramid.services.users import UserService
 
 
 @view_config(route_name='admin', renderer='../templates/admin/base.jinja2')
@@ -223,12 +224,19 @@ class UserViews:
     @view_config(route_name='admin_users', renderer='../templates/admin/users/users_list.jinja2')
     def admin_users(self):
         title = 'Users list'
-        return {'title': title}
+        users = UserService.all(request=self.request)
+        return {'title': title, 'users': users}
 
     @view_config(route_name='user_register', renderer='../templates/admin/users/user_create_edit.jinja2')
     def user_register(self):
         title = 'Register new user'
-        form = RegisterForm()
+        form = RegisterForm(self.request.POST)
+        if self.request.method == "POST" and form.validate():
+            new_user = User(username=form.username.data, email=form.email.data, firstname=form.firstname.data,
+                            lastname=form.lastname.data, about=form.about.data)
+            new_user.set_password(form.password.data.encode('utf8'))
+            self.request.dbsession.add(new_user)
+            return HTTPFound(location=self.request.route_url('admin_users'))
         return {'title': title, 'form': form}
 
 
