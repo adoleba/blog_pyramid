@@ -9,7 +9,7 @@ from slugify import slugify
 
 from blog_pyramid.forms.category import CategoryForm, validate_unique_name
 from blog_pyramid.forms.post import get_post_form, validate_unique_title
-from blog_pyramid.forms.user import get_user_register_form, UserEditForm
+from blog_pyramid.forms.user import get_user_register_form, UserEditForm, get_user_email_edit_form
 from blog_pyramid.models import Post, User
 from blog_pyramid.models.category import Category
 from blog_pyramid.services.categories import CategoryService
@@ -259,5 +259,24 @@ class UserViews:
                 .update({'firstname': new_firstname, 'lastname': new_lastname, 'about': new_about})
 
             return HTTPFound(location=self.request.route_url('admin_users'))
+
+        return {'title': title, 'form': form, 'username': username}
+
+    @view_config(route_name='user_email_edit', renderer='../templates/admin/users/user_edit_email.jinja2')
+    def user_email_edit(self):
+        title = 'Edit email'
+        form = get_user_email_edit_form(self.request.POST, self.request.dbsession)
+        username = self.request.matchdict['username']
+
+        user = self.request.dbsession.query(User).filter_by(username=username).one()
+
+        if self.request.method == "POST":
+            new_email = self.request.params.get('email')
+            if new_email == user.email:
+                return HTTPFound(location=self.request.route_url('admin_users'))
+
+            if form.validate():
+                self.request.dbsession.query(User).filter(User.username == username).update({'email': new_email})
+                return HTTPFound(location=self.request.route_url('admin_users'))
 
         return {'title': title, 'form': form, 'username': username}

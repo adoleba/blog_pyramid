@@ -27,3 +27,13 @@ class UserEditForm(Form):
     firstname = StringField('Firstname', [validators.Length(min=3, max=20)])
     lastname = StringField('Lastname', [validators.Length(min=3, max=20)])
     about = TextAreaField('About user', [validators.Length(min=10)])
+
+
+def get_user_email_edit_form(postdata, dbsession):
+    def validate_email(form, field):
+        if dbsession.query(User).filter_by(email=field.data).first():
+            raise ValidationError('Email already exists')
+
+    class RegisterForm(Form):
+        email = StringField('Email', [validators.Email(), validate_email])
+    return RegisterForm(postdata)
