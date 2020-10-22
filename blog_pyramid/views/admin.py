@@ -4,6 +4,7 @@ from functools import partial
 import deform
 from deform import Form, ValidationFailure
 from pyramid.httpexceptions import HTTPFound
+from pyramid.security import remember
 from pyramid.view import view_config
 from slugify import slugify
 
@@ -27,6 +28,12 @@ def admin(request):
 def login(request):
     title = 'Login'
     form = LoginForm()
+    email = request.POST.get('email')
+    if email:
+        user = UserService.by_email(email, request=request)
+        if user and user.verify_password(request.POST.get('password')):
+            headers = remember(request, user.email)
+            return HTTPFound(location=request.route_url('admin'), headers=headers)
     return {'title': title, 'form': form}
 
 
