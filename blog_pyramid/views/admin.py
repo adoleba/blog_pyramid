@@ -29,12 +29,14 @@ def login(request):
     title = 'Login'
     form = LoginForm()
     email = request.POST.get('email')
+    error = ''
     if email:
         user = UserService.by_email(email, request=request)
         if user and user.verify_password(request.POST.get('password')):
             headers = remember(request, user.username)
             return HTTPFound(location=request.route_url('admin'), headers=headers)
-    return {'title': title, 'form': form}
+        error = 'Incorrect email or password'
+    return {'title': title, 'form': form, 'error': error}
 
 
 @view_config(route_name='logout')
