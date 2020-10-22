@@ -8,6 +8,7 @@ import zope.sqlalchemy
 from .mymodel import MyModel  # flake8: noqa
 from blog_pyramid.models.post import Post
 from blog_pyramid.models.user import User
+from blog_pyramid.models.category import Category
 
 # run configure_mappers after defining all of the models to ensure
 # all relationships can be setup

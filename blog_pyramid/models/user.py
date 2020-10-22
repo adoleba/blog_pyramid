@@ -1,7 +1,6 @@
 import datetime
 
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import relationship
 from passlib.apps import custom_app_context as user_pwd_context
 
 from blog_pyramid.models.meta import Base
@@ -18,7 +17,6 @@ class User(Base):
     firstname = Column(String(30))
     lastname = Column(String(30))
     role = Column(String(10), default='editor', nullable=True)
-    posts = relationship('Post', back_populates='author')
 
     def verify_password(self, password):
         if password == self.password:
