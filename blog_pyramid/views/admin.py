@@ -4,7 +4,7 @@ from functools import partial
 import deform
 from deform import Form, ValidationFailure
 from pyramid.httpexceptions import HTTPFound
-from pyramid.security import remember
+from pyramid.security import remember, forget
 from pyramid.view import view_config
 from slugify import slugify
 
@@ -35,6 +35,12 @@ def login(request):
             headers = remember(request, user.username)
             return HTTPFound(location=request.route_url('admin'), headers=headers)
     return {'title': title, 'form': form}
+
+
+@view_config(route_name='logout')
+def logout(request):
+    headers = forget(request)
+    return HTTPFound(location=request.route_url('login'), headers=headers)
 
 
 class PostsViews:
