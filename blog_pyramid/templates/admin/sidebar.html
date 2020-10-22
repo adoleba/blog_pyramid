@@ -6,9 +6,12 @@
         <li>
             <a href="{{ request.route_url('admin_categories') }}">Categories</a>
         </li>
+
+        {% if request.user.role == 'admin' %}
         <li>
             <a href="{{ request.route_url('admin_users') }}">Users</a>
         </li>
+        {% endif %}
     </ul>
 </div>
 

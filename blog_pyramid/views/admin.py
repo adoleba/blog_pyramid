@@ -5,7 +5,7 @@ import deform
 from deform import Form, ValidationFailure
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember, forget
-from pyramid.view import view_config
+from pyramid.view import view_config, forbidden_view_config
 from slugify import slugify
 
 from blog_pyramid.forms.category import CategoryForm, validate_unique_name
@@ -18,7 +18,7 @@ from blog_pyramid.services.posts import PostService
 from blog_pyramid.services.users import UserService
 
 
-@view_config(route_name='admin', renderer='../templates/admin/base.jinja2')
+@view_config(route_name='admin', renderer='../templates/admin/base.jinja2', permission='user')
 def admin(request):
     title = 'Admin panel'
     return {'title': title}
@@ -54,14 +54,14 @@ class PostsViews:
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
         return Form(post_form, buttons=(submit, cancel))
 
-    @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2')
+    @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2', permission='user')
     def admin_posts(self):
         title = 'Posts list'
         page = int(self.request.params.get('page', 1))
         paginator = PostService.get_paginator(request=self.request, page=page)
         return {'title': title, 'paginator': paginator}
 
-    @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create_edit.jinja2')
+    @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create_edit.jinja2', permission='user')
     def post_create(self):
         title = 'Create a post'
         form = self.post_form
@@ -89,7 +89,7 @@ class PostsViews:
 
         return {'title': title, 'form': form.render()}
 
-    @view_config(route_name='post_edit', renderer='../templates/admin/posts/post_create_edit.jinja2')
+    @view_config(route_name='post_edit', renderer='../templates/admin/posts/post_create_edit.jinja2', permission='user')
     def post_edit(self):
         title = 'Edit a post'
         slug = self.request.matchdict['slug']
@@ -126,7 +126,7 @@ class PostsViews:
 
         return {'title': title, 'form': form, 'url': url}
 
-    @view_config(route_name='post_delete', renderer='../templates/admin/posts/post_delete.jinja2')
+    @view_config(route_name='post_delete', renderer='../templates/admin/posts/post_delete.jinja2', permission='user')
     def post_delete(self):
         title = 'Delete post'
         slug = self.request.matchdict['slug']
@@ -134,7 +134,7 @@ class PostsViews:
 
         return {'title': title, 'post': post}
 
-    @view_config(route_name='post_delete_confirmed', renderer='../templates/admin/categories/category_delete.jinja2')
+    @view_config(route_name='post_delete_confirmed', renderer='../templates/admin/categories/category_delete.jinja2', permission='user')
     def post_delete_confirmed(self):
         slug = self.request.matchdict['slug']
         self.request.dbsession.query(Post).filter(Post.slug == slug).delete()
@@ -153,14 +153,14 @@ class CategoriesViews:
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
         return Form(category_form, buttons=(submit, cancel, ))
 
-    @view_config(route_name='admin_categories', renderer='../templates/admin/categories/categories_list.jinja2')
+    @view_config(route_name='admin_categories', renderer='../templates/admin/categories/categories_list.jinja2', permission='user')
     def admin_categories(self):
         title = 'Categories list'
         page = int(self.request.params.get('page', 1))
         paginator = CategoryService.get_paginator(request=self.request, page=page)
         return {'title': title, 'paginator': paginator}
 
-    @view_config(route_name='category_create', renderer='../templates/admin/categories/category_create_edit.jinja2')
+    @view_config(route_name='category_create', renderer='../templates/admin/categories/category_create_edit.jinja2', permission='user')
     def category_create(self):
         title = 'Create a category'
 
@@ -188,7 +188,7 @@ class CategoriesViews:
 
         return {'title': title, 'form': form.render()}
 
-    @view_config(route_name='category_edit', renderer='../templates/admin/categories/category_create_edit.jinja2')
+    @view_config(route_name='category_edit', renderer='../templates/admin/categories/category_create_edit.jinja2', permission='user')
     def category_edit(self):
         title = 'Edit a category'
 
@@ -221,7 +221,7 @@ class CategoriesViews:
 
         return {'title': title, 'form': form, 'url': url}
 
-    @view_config(route_name='category_delete', renderer='../templates/admin/categories/category_delete.jinja2')
+    @view_config(route_name='category_delete', renderer='../templates/admin/categories/category_delete.jinja2', permission='user')
     def category_delete(self):
         title = 'Delete category'
         slug = self.request.matchdict['slug']
@@ -229,7 +229,7 @@ class CategoriesViews:
 
         return {'title': title, 'category': category}
 
-    @view_config(route_name='category_delete_confirmed', renderer='../templates/admin/categories/category_delete.jinja2')
+    @view_config(route_name='category_delete_confirmed', renderer='../templates/admin/categories/category_delete.jinja2', permission='user')
     def category_delete_confirmed(self):
         slug = self.request.matchdict['slug']
         self.request.dbsession.query(Category).filter(Category.slug == slug).delete()
@@ -241,13 +241,13 @@ class UserViews:
     def __init__(self, request):
         self.request = request
 
-    @view_config(route_name='admin_users', renderer='../templates/admin/users/users_list.jinja2')
+    @view_config(route_name='admin_users', renderer='../templates/admin/users/users_list.jinja2', permission='admin')
     def admin_users(self):
         title = 'Users list'
         users = UserService.all(request=self.request)
         return {'title': title, 'users': users}
 
-    @view_config(route_name='user_register', renderer='../templates/admin/users/user_register.jinja2')
+    @view_config(route_name='user_register', renderer='../templates/admin/users/user_register.jinja2', permission='admin')
     def user_register(self):
         title = 'Register new user'
         form = get_user_register_form(self.request.POST, self.request.dbsession)
@@ -259,7 +259,7 @@ class UserViews:
             return HTTPFound(location=self.request.route_url('admin_users'))
         return {'title': title, 'form': form}
 
-    @view_config(route_name='user_edit', renderer='../templates/admin/users/user_edit.jinja2')
+    @view_config(route_name='user_edit', renderer='../templates/admin/users/user_edit.jinja2', permission='admin')
     def user_edit(self):
         title = 'Edit user'
         form = UserEditForm(self.request.POST)
@@ -282,7 +282,7 @@ class UserViews:
 
         return {'title': title, 'form': form, 'username': username}
 
-    @view_config(route_name='user_email_edit', renderer='../templates/admin/users/user_edit_email.jinja2')
+    @view_config(route_name='user_email_edit', renderer='../templates/admin/users/user_edit_email.jinja2', permission='admin')
     def user_email_edit(self):
         title = 'Edit email'
         form = get_user_email_edit_form(self.request.POST, self.request.dbsession)
@@ -300,3 +300,8 @@ class UserViews:
                 return HTTPFound(location=self.request.route_url('admin_users'))
 
         return {'title': title, 'form': form, 'username': username}
+
+
+@forbidden_view_config()
+def forbidden_view(request):
+    return HTTPFound(location=request.route_url('login'))
