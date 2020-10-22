@@ -9,7 +9,7 @@ from slugify import slugify
 
 from blog_pyramid.forms.category import CategoryForm, validate_unique_name
 from blog_pyramid.forms.post import get_post_form, validate_unique_title
-from blog_pyramid.forms.user import get_user_register_form, UserEditForm, get_user_email_edit_form
+from blog_pyramid.forms.user import get_user_register_form, UserEditForm, get_user_email_edit_form, LoginForm
 from blog_pyramid.models import Post, User
 from blog_pyramid.models.category import Category
 from blog_pyramid.services.categories import CategoryService
@@ -21,6 +21,13 @@ from blog_pyramid.services.users import UserService
 def admin(request):
     title = 'Admin panel'
     return {'title': title}
+
+
+@view_config(route_name='login', renderer='../templates/admin/login.jinja2')
+def login(request):
+    title = 'Login'
+    form = LoginForm()
+    return {'title': title, 'form': form}
 
 
 class PostsViews:

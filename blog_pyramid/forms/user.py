@@ -37,3 +37,8 @@ def get_user_email_edit_form(postdata, dbsession):
     class RegisterForm(Form):
         email = StringField('Email', [validators.Email(), validate_email])
     return RegisterForm(postdata)
+
+
+class LoginForm(Form):
+    email = StringField('Email', [validators.Email()])
+    password = PasswordField('Password')
