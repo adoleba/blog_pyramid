@@ -32,7 +32,7 @@ def login(request):
     if email:
         user = UserService.by_email(email, request=request)
         if user and user.verify_password(request.POST.get('password')):
-            headers = remember(request, user.email)
+            headers = remember(request, user.username)
             return HTTPFound(location=request.route_url('admin'), headers=headers)
     return {'title': title, 'form': form}
 

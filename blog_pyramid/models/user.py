@@ -17,6 +17,7 @@ class User(Base):
     created = Column(DateTime, default=datetime.datetime.utcnow)
     firstname = Column(String(30))
     lastname = Column(String(30))
+    role = Column(String(10), default='editor', nullable=True)
     posts = relationship('Post', back_populates='author')
 
     def verify_password(self, password):
