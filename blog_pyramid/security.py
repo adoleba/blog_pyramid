@@ -3,7 +3,17 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Allow, Everyone, Authenticated
 
 from blog_pyramid.models.user import User
-from blog_pyramid.services.users import UserService
+
+
+class CustomFactory:
+    def __init__(self, request):
+        self.request = request
+        self.__acl__ = [
+            (Allow, Everyone, 'view'),
+            (Allow, 'role:admin', 'admin'),
+            (Allow, 'role:admin', 'user'),
+            (Allow, 'role:editor', 'user'),
+        ]
 
 
 class CustomAuthenticationPolicy(AuthTktAuthenticationPolicy):
@@ -32,6 +42,7 @@ def get_user(request):
 def includeme(config):
     settings = config.get_settings()
     authn_policy = CustomAuthenticationPolicy(settings['auth.secret'], hashalg='sha512')
+    config.set_root_factory(CustomFactory)
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(ACLAuthorizationPolicy())
     config.add_request_method(get_user, 'user', reify=True)

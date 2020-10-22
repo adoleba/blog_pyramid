@@ -24,7 +24,7 @@ def admin(request):
     return {'title': title}
 
 
-@view_config(route_name='login', renderer='../templates/admin/login.jinja2')
+@view_config(route_name='login', renderer='../templates/admin/login.jinja2', permission='view')
 def login(request):
     title = 'Login'
     form = LoginForm()
@@ -39,7 +39,7 @@ def login(request):
     return {'title': title, 'form': form, 'error': error}
 
 
-@view_config(route_name='logout')
+@view_config(route_name='logout', permission='view')
 def logout(request):
     headers = forget(request)
     return HTTPFound(location=request.route_url('login'), headers=headers)
