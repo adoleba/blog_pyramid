@@ -78,7 +78,7 @@ class PostsViews:
             try:
                 form.validate(controls)
                 new_post = Post(title=post_title, intro=post_intro, body=post_body, category=post_category,
-                                author=self.request.user)
+                                author=self.request.user.username)
                 self.request.dbsession.add(new_post)
 
                 url = self.request.route_url('admin_posts')

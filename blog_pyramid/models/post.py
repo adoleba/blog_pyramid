@@ -16,6 +16,7 @@ class Post(Base):
     edited = Column(DateTime, default=datetime.datetime.utcnow)
     slug = Column(String(40), unique=True)
     category = Column(String(30))
+    author = Column(String(30))
 
     def __init__(self, title, intro, body, category, author):
         self.slug = slugify(title)
