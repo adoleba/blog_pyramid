@@ -8,7 +8,7 @@ from pyramid.security import remember, forget
 from pyramid.view import view_config, forbidden_view_config
 from slugify import slugify
 
-from blog_pyramid.forms.category import CategoryForm, validate_unique_name
+from blog_pyramid.forms.category import CategoryCreateForm, validate_unique_name, CategoryEditForm
 from blog_pyramid.forms.post import get_post_form, validate_unique_title
 from blog_pyramid.forms.user import get_user_register_form, UserEditForm, get_user_email_edit_form, LoginForm
 from blog_pyramid.models import Post, User
@@ -150,11 +150,11 @@ class CategoriesViews:
         self.request = request
 
     @property
-    def category_form(self):
-        category_form = CategoryForm(validator=partial(validate_unique_name, dbsession=self.request.dbsession)).bind(request=self.request)
+    def category_create_form(self):
+        category_create_form = CategoryCreateForm(validator=partial(validate_unique_name, dbsession=self.request.dbsession)).bind(request=self.request)
         submit = deform.Button(name='Save', css_class='btn btn-info')
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
-        return Form(category_form, buttons=(submit, cancel, ))
+        return Form(category_create_form, buttons=(submit, cancel, ))
 
     @view_config(route_name='admin_categories', renderer='../templates/admin/categories/categories_list.jinja2', permission='user')
     def admin_categories(self):
@@ -167,7 +167,7 @@ class CategoriesViews:
     def category_create(self):
         title = 'Create a category'
 
-        form = self.category_form
+        form = self.category_create_form
 
         if 'Save' in self.request.params:
             name = self.request.params.get('name')
@@ -191,38 +191,23 @@ class CategoriesViews:
 
         return {'title': title, 'form': form.render()}
 
-    @view_config(route_name='category_edit', renderer='../templates/admin/categories/category_create_edit.jinja2', permission='user')
+    @view_config(route_name='category_edit', renderer='../templates/admin/categories/category_edit.jinja2', permission='user')
     def category_edit(self):
-        title = 'Edit a category'
-
+        form = CategoryEditForm(self.request.POST)
         slug = self.request.matchdict['slug']
         category = self.request.dbsession.query(Category).filter_by(slug=slug).one()
-        category_as_dict = category.__dict__
-        form = self.category_form.render(appstruct=category_as_dict)
-        url = self.request.route_url('category_edit', slug=category.slug)
+        form.description.data = category.description
 
-        if 'Save' in self.request.params:
-            new_category_name = self.request.params.get('name')
+        if self.request.method == "POST" and form.validate():
             new_category_description = self.request.params.get('description')
-            new_category_slug = slugify(new_category_name)
-            controls = self.request.POST.items()
-            form_to_validate = self.category_form
 
-            try:
-                form_to_validate.validate(controls)
-                self.request.dbsession.query(Category).filter(Category.slug == slug)\
-                .update({'slug': new_category_slug, 'description': new_category_description, 'name': new_category_name})
+            self.request.dbsession.query(Category).filter(Category.slug == slug)\
+            .update({'description': new_category_description})
 
-                url = self.request.route_url('admin_categories')
-                return HTTPFound(location=url)
+            url = self.request.route_url('admin_categories')
+            return HTTPFound(location=url)
 
-            except ValidationFailure as e:
-                return {'form': e.render()}
-
-        if 'Cancel' in self.request.params:
-            return HTTPFound(location=self.request.route_url('admin_categories'))
-
-        return {'title': title, 'form': form, 'url': url}
+        return {'form': form, 'slug': slug, 'category': category}
 
     @view_config(route_name='category_delete', renderer='../templates/admin/categories/category_delete.jinja2', permission='user')
     def category_delete(self):

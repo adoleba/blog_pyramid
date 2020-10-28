@@ -1,0 +1,36 @@
+{% extends  "../base.jinja2" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Edit category {{ category.name }}</h4>
+                        <div class="row">
+                            <form action="{{request.route_url('category_edit', slug=slug)}}" method="post" class="form" enctype="multipart/form-data">
+
+                                {% for error in form.description.errors %}
+                                    <div class="error">{{ error }}</div>
+                                {% endfor %}
+                                <div class="form-group">
+                                    <label for="description">{{form.description.label}}</label>
+                                    {{form.description(class_='form-control')}}
+                                </div>
+
+                                <div class="form-group">
+                                <label></label>
+                                <button type="submit" class="btn btn-info">Save</button>
+                                <a href="{{ request.route_url('admin_categories') }}" class="btn btn-secondary">Cancel</a>
+                                </div>
+
+                            </form>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
