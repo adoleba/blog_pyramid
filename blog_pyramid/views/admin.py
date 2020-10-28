@@ -9,7 +9,7 @@ from pyramid.view import view_config, forbidden_view_config
 from slugify import slugify
 
 from blog_pyramid.forms.category import CategoryCreateForm, validate_unique_name, CategoryEditForm
-from blog_pyramid.forms.post import get_post_form, validate_unique_title
+from blog_pyramid.forms.post import get_post_form, validate_unique_title, PostEditForm
 from blog_pyramid.forms.user import get_user_register_form, UserEditForm, get_user_email_edit_form, LoginForm
 from blog_pyramid.models import Post, User
 from blog_pyramid.models.category import Category
@@ -50,11 +50,11 @@ class PostsViews:
         self.request = request
 
     @property
-    def post_form(self):
-        post_form = get_post_form(self.request.dbsession, validator=partial(validate_unique_title, dbsession=self.request.dbsession)).bind(request=self.request)
+    def post_create_form(self):
+        post_create_form = get_post_form(self.request.dbsession, validator=partial(validate_unique_title, dbsession=self.request.dbsession)).bind(request=self.request)
         submit = deform.Button(name='Save', css_class='btn btn-info')
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
-        return Form(post_form, buttons=(submit, cancel))
+        return Form(post_create_form, buttons=(submit, cancel))
 
     @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2', permission='user')
     def admin_posts(self):
@@ -63,10 +63,10 @@ class PostsViews:
         paginator = PostService.get_paginator(request=self.request, page=page)
         return {'title': title, 'paginator': paginator}
 
-    @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create_edit.jinja2', permission='user')
+    @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create.jinja2', permission='user')
     def post_create(self):
         title = 'Create a post'
-        form = self.post_form
+        form = self.post_create_form
 
         if 'Save' in self.request.params:
             post_title = self.request.params.get('title')
@@ -92,42 +92,25 @@ class PostsViews:
 
         return {'title': title, 'form': form.render()}
 
-    @view_config(route_name='post_edit', renderer='../templates/admin/posts/post_create_edit.jinja2', permission='user')
+    @view_config(route_name='post_edit', renderer='../templates/admin/posts/post_edit.jinja2', permission='user')
     def post_edit(self):
-        title = 'Edit a post'
+        form = PostEditForm(self.request.POST)
         slug = self.request.matchdict['slug']
         post = self.request.dbsession.query(Post).filter_by(slug=slug).one()
-        post_as_dict = post.__dict__
-        form = self.post_form.render(appstruct=post_as_dict)
-        url = self.request.route_url('post_edit', slug=post.slug)
+        form.intro.data = post.intro
+        form.body.data = post.body
 
-        if 'Save' in self.request.params:
-            new_post_title = self.request.params.get('title')
+        if self.request.method == "POST" and form.validate():
             new_post_intro = self.request.params.get('intro')
             new_post_body = self.request.params.get('body')
-            new_post_category = self.request.params.get('category')
             edited = datetime.datetime.utcnow()
-            new_post_slug = slugify(new_post_title)
-            controls = self.request.POST.items()
-            form_to_validate = self.post_form
+            self.request.dbsession.query(Post).filter(Post.slug == slug) \
+            .update({'intro': new_post_intro, 'body': new_post_body, 'edited': edited})
 
-            try:
-                form_to_validate.validate(controls)
+            url = self.request.route_url('admin_posts')
+            return HTTPFound(location=url)
 
-                self.request.dbsession.query(Post).filter(Post.slug == slug) \
-                .update({'slug': new_post_slug, 'title': new_post_title, 'intro': new_post_intro, 'body': new_post_body,
-                         'category': new_post_category, 'edited': edited})
-
-                url = self.request.route_url('admin_posts')
-                return HTTPFound(location=url)
-
-            except ValidationFailure as e:
-                return {'form': e.render()}
-
-        if 'Cancel' in self.request.params:
-            return HTTPFound(location=self.request.route_url('admin_posts'))
-
-        return {'title': title, 'form': form, 'url': url}
+        return {'form': form, 'post': post}
 
     @view_config(route_name='post_delete', renderer='../templates/admin/posts/post_delete.jinja2', permission='user')
     def post_delete(self):
@@ -163,7 +146,7 @@ class CategoriesViews:
         paginator = CategoryService.get_paginator(request=self.request, page=page)
         return {'title': title, 'paginator': paginator}
 
-    @view_config(route_name='category_create', renderer='../templates/admin/categories/category_create_edit.jinja2', permission='user')
+    @view_config(route_name='category_create', renderer='../templates/admin/categories/category_create.jinja2', permission='user')
     def category_create(self):
         title = 'Create a category'
 

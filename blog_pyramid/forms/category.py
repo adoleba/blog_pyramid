@@ -16,4 +16,4 @@ class CategoryCreateForm(colander.MappingSchema):
 
 
 class CategoryEditForm(Form):
-    description = TextAreaField('Description', [validators.Length(min=3, max=20)])
+    description = TextAreaField('Description', [validators.Length(min=10, max=100)])

@@ -1,5 +1,6 @@
 import colander
 import deform.widget
+from wtforms import Form, TextAreaField, validators
 
 from blog_pyramid.models import Post
 from blog_pyramid.models.category import Category
@@ -28,3 +29,8 @@ def get_post_form(dbsession, validator):
             widget=deform.widget.SelectWidget(values=get_categories(dbsession)),
         )
     return PostForm(validator=validator)
+
+
+class PostEditForm(Form):
+    intro = TextAreaField('Intro', [validators.Length(min=10, max=200)])
+    body = TextAreaField('Body', [validators.Length(min=10, max=200)])
