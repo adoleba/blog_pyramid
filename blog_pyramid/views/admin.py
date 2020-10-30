@@ -252,6 +252,13 @@ class UserViews:
         users = UserService.all(request=self.request)
         return {'title': title, 'users': users}
 
+    @view_config(route_name='user_posts', renderer='../templates/admin/users/user_posts_list.jinja2',
+                 permission='admin')
+    def user_posts(self):
+        username = self.request.matchdict['username']
+        posts = PostService.by_user(self.request, username=username)
+        return {'posts': posts, 'username': username}
+
     @view_config(route_name='user_register', renderer='../templates/admin/users/user_register.jinja2', permission='admin')
     def user_register(self):
         title = 'Register new user'

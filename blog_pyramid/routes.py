@@ -18,3 +18,4 @@ def includeme(config):
     config.add_route('user_register', '/admin/users/register')
     config.add_route('user_edit', '/admin/users/{username}/edit')
     config.add_route('user_email_edit', '/admin/users/{username}/email_edit')
+    config.add_route('user_posts', '/admin/users/{username}/posts')

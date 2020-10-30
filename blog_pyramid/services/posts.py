@@ -21,3 +21,7 @@ class PostService:
             return request.current_route_url(_query=query_params)
 
         return paginate_sqlalchemy.SqlalchemyOrmPage(query, page, items_per_page=3, url_maker=url_maker)
+
+    @classmethod
+    def by_user(cls, request, username):
+        return request.dbsession.query(Post).filter(Post.author == username).order_by(Post.created.desc())
