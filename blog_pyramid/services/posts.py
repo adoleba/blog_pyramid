@@ -10,7 +10,10 @@ class PostService:
 
     @classmethod
     def get_paginator(cls, request, page=1):
-        query = request.dbsession.query(Post).order_by(Post.created.desc())
+        if request.user.role == 'admin':
+            query = request.dbsession.query(Post).order_by(Post.created.desc())
+        else:
+            query = request.dbsession.query(Post).filter(Post.author == request.user.username).order_by(Post.created.desc())
         query_params = request.GET.mixed()
 
         def url_maker(link_page):

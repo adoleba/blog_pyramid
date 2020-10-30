@@ -3,7 +3,7 @@ from functools import partial
 
 import deform
 from deform import Form, ValidationFailure
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPForbidden
 from pyramid.security import remember, forget
 from pyramid.view import view_config, forbidden_view_config
 
@@ -62,6 +62,21 @@ class PostsViews:
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
         return Form(post_edit_form, buttons=(submit, cancel))
 
+    @property
+    def logged_user(self):
+        logged_user = self.request.dbsession.query(User).filter_by(username=self.request.authenticated_userid).one()
+        return logged_user
+
+    @property
+    def slug(self):
+        slug = self.request.matchdict['slug']
+        return slug
+
+    @property
+    def post(self):
+        post = self.request.dbsession.query(Post).filter_by(slug=self.slug).one()
+        return post
+
     @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2', permission='user')
     def admin_posts(self):
         title = 'Posts list'
@@ -100,47 +115,49 @@ class PostsViews:
 
     @view_config(route_name='post_edit', renderer='../templates/admin/posts/post_edit.jinja2', permission='user')
     def post_edit(self):
-        slug = self.request.matchdict['slug']
-        post = self.request.dbsession.query(Post).filter_by(slug=slug).one()
-        post_as_dict = post.__dict__
+
+        post_as_dict = self.post.__dict__
         form = self.post_edit_form.render(appstruct=post_as_dict)
 
-        if 'Save' in self.request.params:
-            new_post_intro = self.request.params.get('intro')
-            new_post_body = self.request.params.get('body')
-            new_post_category = self.request.params.get('category')
-            controls = self.request.POST.items()
-            edited = datetime.datetime.utcnow()
-            form_to_validate = self.post_edit_form
+        if self.logged_user.role == 'admin' or self.request.authenticated_userid == self.post.author:
 
-            try:
-                form_to_validate.validate(controls)
-                self.request.dbsession.query(Post).filter(Post.slug == slug) \
-                .update({'intro': new_post_intro, 'body': new_post_body, 'category': new_post_category, 'edited': edited})
+            if 'Save' in self.request.params:
+                new_post_intro = self.request.params.get('intro')
+                new_post_body = self.request.params.get('body')
+                new_post_category = self.request.params.get('category')
+                controls = self.request.POST.items()
+                edited = datetime.datetime.utcnow()
+                form_to_validate = self.post_edit_form
 
-                url = self.request.route_url('admin_posts')
-                return HTTPFound(location=url)
+                try:
+                    form_to_validate.validate(controls)
+                    self.request.dbsession.query(Post).filter(Post.slug == self.slug) \
+                    .update({'intro': new_post_intro, 'body': new_post_body, 'category': new_post_category, 'edited': edited})
 
-            except ValidationFailure as e:
-                return {'form': e.render(), 'post': post}
+                    url = self.request.route_url('admin_posts')
+                    return HTTPFound(location=url)
 
-        if 'Cancel' in self.request.params:
-            return HTTPFound(location=self.request.route_url('admin_posts'))
+                except ValidationFailure as e:
+                    return {'form': e.render(), 'post': self.post}
 
-        return {'form': form, 'post': post}
+            if 'Cancel' in self.request.params:
+                return HTTPFound(location=self.request.route_url('admin_posts'))
+        else:
+            return HTTPForbidden()
+
+        return {'form': form, 'post': self.post}
 
     @view_config(route_name='post_delete', renderer='../templates/admin/posts/post_delete.jinja2', permission='user')
     def post_delete(self):
-        title = 'Delete post'
-        slug = self.request.matchdict['slug']
-        post = self.request.dbsession.query(Post).filter_by(slug=slug).one()
-
-        return {'title': title, 'post': post}
+        if self.logged_user.role == 'admin' or self.request.authenticated_userid == self.post.author:
+            title = 'Delete post'
+            return {'title': title, 'post': self.post}
+        else:
+            return HTTPForbidden()
 
     @view_config(route_name='post_delete_confirmed', renderer='../templates/admin/categories/category_delete.jinja2', permission='user')
     def post_delete_confirmed(self):
-        slug = self.request.matchdict['slug']
-        self.request.dbsession.query(Post).filter(Post.slug == slug).delete()
+        self.request.dbsession.query(Post).filter(Post.slug == self.slug).delete()
 
         return HTTPFound(location=self.request.route_url('admin_posts'))
 
