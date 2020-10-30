@@ -4,11 +4,11 @@ from blog_pyramid.models import User
 
 def get_user_register_form(postdata, dbsession):
     def validate_username(form, field):
-        if dbsession.query(User).filter_by(username=field.data).first():
+        if dbsession.query(User).filter_by(username=field.data.title()).first():
             raise ValidationError('Username already exists')
 
     def validate_email(form, field):
-        if dbsession.query(User).filter_by(email=field.data).first():
+        if dbsession.query(User).filter_by(email=field.data.lower()).first():
             raise ValidationError('Email already exists')
 
     class RegisterForm(Form):
@@ -31,7 +31,7 @@ class UserEditForm(Form):
 
 def get_user_email_edit_form(postdata, dbsession):
     def validate_email(form, field):
-        if dbsession.query(User).filter_by(email=field.data).first():
+        if dbsession.query(User).filter_by(email=field.data.lower()).first():
             raise ValidationError('Email already exists')
 
     class RegisterForm(Form):

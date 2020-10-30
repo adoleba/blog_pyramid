@@ -6,7 +6,7 @@ from blog_pyramid.models.category import Category
 
 
 def validate_unique_name(node, appstruct, dbsession):
-    if dbsession.query(Category).filter_by(name=appstruct['name']).first():
+    if dbsession.query(Category).filter_by(name=appstruct['name'].title()).first():
         raise colander.Invalid(node, "Category already taken")
 
 

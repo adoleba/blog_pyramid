@@ -201,7 +201,7 @@ class CategoriesViews:
 
             try:
                 form.validate(controls)
-                new_category = Category(name=name, description=description)
+                new_category = Category(name=name.title(), description=description)
 
                 self.request.dbsession.add(new_category)
 
@@ -272,7 +272,7 @@ class UserViews:
         title = 'Register new user'
         form = get_user_register_form(self.request.POST, self.request.dbsession)
         if self.request.method == "POST" and form.validate():
-            new_user = User(username=form.username.data, email=form.email.data, firstname=form.firstname.data,
+            new_user = User(username=form.username.data.title(), email=form.email.data.lower(), firstname=form.firstname.data,
                             lastname=form.lastname.data, about=form.about.data)
             new_user.set_password(form.password.data.encode('utf8'))
             self.request.dbsession.add(new_user)

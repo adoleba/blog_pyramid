@@ -1,5 +1,6 @@
 import colander
 import deform.widget
+from slugify import slugify
 from wtforms import Form, TextAreaField, validators
 
 from blog_pyramid.models import Post
@@ -12,7 +13,7 @@ def get_categories(dbsession):
 
 
 def validate_unique_title(node, appstruct, dbsession):
-    if dbsession.query(Post).filter_by(title=appstruct['title']).first():
+    if dbsession.query(Post).filter_by(slug=slugify(appstruct['title'])).first():
         raise colander.Invalid(node, "Post title already exists")
 
 
