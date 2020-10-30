@@ -180,6 +180,14 @@ class CategoriesViews:
         paginator = CategoryService.get_paginator(request=self.request, page=page)
         return {'title': title, 'paginator': paginator}
 
+    @view_config(route_name='category_posts', renderer='../templates/admin/categories/category_posts_list.jinja2',
+                 permission='user')
+    def category_posts(self):
+        slug = self.request.matchdict['slug']
+        category = self.request.dbsession.query(Category).filter_by(slug=slug).one()
+        posts = PostService.by_category(self.request, category=category.name)
+        return {'posts': posts, 'category': category}
+
     @view_config(route_name='category_create', renderer='../templates/admin/categories/category_create.jinja2', permission='user')
     def category_create(self):
         title = 'Create a category'

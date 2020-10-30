@@ -25,3 +25,11 @@ class PostService:
     @classmethod
     def by_user(cls, request, username):
         return request.dbsession.query(Post).filter(Post.author == username).order_by(Post.created.desc())
+
+    @classmethod
+    def by_category(cls, request, category):
+        if request.user.role == 'admin':
+            return request.dbsession.query(Post).filter(Post.category == category).order_by(Post.created.desc())
+        else:
+            return request.dbsession.query(Post).filter(Post.category == category, Post.author == request.user.username).\
+                order_by(Post.created.desc())
