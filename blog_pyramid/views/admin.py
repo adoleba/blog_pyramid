@@ -254,6 +254,21 @@ class UserViews:
     def __init__(self, request):
         self.request = request
 
+    @property
+    def username(self):
+        username = self.request.matchdict['username']
+        return username
+
+    @property
+    def user(self):
+        user = self.request.dbsession.query(User).filter_by(username=self.username).one()
+        return user
+
+    @property
+    def logged_user(self):
+        logged_user = self.request.dbsession.query(User).filter_by(username=self.request.authenticated_userid).one()
+        return logged_user
+
     @view_config(route_name='admin_users', renderer='../templates/admin/users/users_list.jinja2', permission='admin')
     def admin_users(self):
         title = 'Users list'
@@ -263,9 +278,8 @@ class UserViews:
     @view_config(route_name='user_posts', renderer='../templates/admin/users/user_posts_list.jinja2',
                  permission='admin')
     def user_posts(self):
-        username = self.request.matchdict['username']
-        posts = PostService.by_user(self.request, username=username)
-        return {'posts': posts, 'username': username}
+        posts = PostService.by_user(self.request, username=self.username)
+        return {'posts': posts, 'username': self.username}
 
     @view_config(route_name='user_register', renderer='../templates/admin/users/user_register.jinja2', permission='admin')
     def user_register(self):
@@ -279,47 +293,52 @@ class UserViews:
             return HTTPFound(location=self.request.route_url('admin_users'))
         return {'title': title, 'form': form}
 
-    @view_config(route_name='user_edit', renderer='../templates/admin/users/user_edit.jinja2', permission='admin')
+    @view_config(route_name='user_edit', renderer='../templates/admin/users/user_edit.jinja2', permission='user')
     def user_edit(self):
-        title = 'Edit user'
-        form = UserEditForm(self.request.POST)
-        username = self.request.matchdict['username']
+        if self.logged_user.role == 'admin' or self.request.authenticated_userid == self.username:
+            title = 'Edit user'
+            form = UserEditForm(self.request.POST)
 
-        user = self.request.dbsession.query(User).filter_by(username=username).one()
-        form.lastname.data = user.lastname
-        form.firstname.data = user.firstname
-        form.about.data = user.about
+            form.lastname.data = self.user.lastname
+            form.firstname.data = self.user.firstname
+            form.about.data = self.user.about
 
-        if self.request.method == "POST" and form.validate():
-            new_lastname = self.request.params.get('lastname')
-            new_about = self.request.params.get('about')
-            new_firstname = self.request.params.get('firstname')
+            if self.request.method == "POST" and form.validate():
+                new_lastname = self.request.params.get('lastname')
+                new_about = self.request.params.get('about')
+                new_firstname = self.request.params.get('firstname')
 
-            self.request.dbsession.query(User).filter(User.username == username) \
-                .update({'firstname': new_firstname, 'lastname': new_lastname, 'about': new_about})
+                self.request.dbsession.query(User).filter(User.username == self.username) \
+                    .update({'firstname': new_firstname, 'lastname': new_lastname, 'about': new_about})
 
-            return HTTPFound(location=self.request.route_url('admin_users'))
+                return HTTPFound(location=self.request.route_url('user_profile', username=self.username))
 
-        return {'title': title, 'form': form, 'username': username}
+            return {'title': title, 'form': form, 'user': self.user}
+        else:
+            return HTTPForbidden()
 
-    @view_config(route_name='user_email_edit', renderer='../templates/admin/users/user_edit_email.jinja2', permission='admin')
+    @view_config(route_name='user_email_edit', renderer='../templates/admin/users/user_edit_email.jinja2', permission='user')
     def user_email_edit(self):
-        title = 'Edit email'
-        form = get_user_email_edit_form(self.request.POST, self.request.dbsession)
-        username = self.request.matchdict['username']
+        if self.logged_user.role == 'admin' or self.request.authenticated_userid == self.username:
+            title = 'Edit email'
+            form = get_user_email_edit_form(self.request.POST, self.request.dbsession)
 
-        user = self.request.dbsession.query(User).filter_by(username=username).one()
+            if self.request.method == "POST":
+                new_email = self.request.params.get('email')
+                if new_email == self.user.email:
+                    return HTTPFound(location=self.request.route_url('user_profile', username=self.username))
 
-        if self.request.method == "POST":
-            new_email = self.request.params.get('email')
-            if new_email == user.email:
-                return HTTPFound(location=self.request.route_url('admin_users'))
+                if form.validate():
+                    self.request.dbsession.query(User).filter(User.username == self.username).update({'email': new_email})
+                    return HTTPFound(location=self.request.route_url('user_profile', username=self.username))
 
-            if form.validate():
-                self.request.dbsession.query(User).filter(User.username == username).update({'email': new_email})
-                return HTTPFound(location=self.request.route_url('admin_users'))
+            return {'title': title, 'form': form, 'user': self.user}
+        else:
+            return HTTPForbidden()
 
-        return {'title': title, 'form': form, 'username': username}
+    @view_config(route_name='user_profile', renderer='../templates/admin/users/user_profile.jinja2', permission='user')
+    def user_profile(self):
+        return {'username': self.username, 'user': self.user,  'role': self.logged_user.role}
 
 
 @forbidden_view_config()

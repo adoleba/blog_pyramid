@@ -8,7 +8,7 @@
                 <div class="card-body">
                     <h4 class="card-title">{{ title }}</h4>
                         <div class="row">
-                            <form action="{{request.route_url('user_edit', username=username)}}" method="post" class="form" enctype="multipart/form-data">
+                            <form action="{{request.route_url('user_edit', username=user.username)}}" method="post" class="form" enctype="multipart/form-data">
 
                                 {% for error in form.firstname.errors %}
                                     <div class="error">{{ error }}</div>
@@ -37,7 +37,7 @@
                                 <div class="form-group">
                                 <label></label>
                                 <button type="submit" class="btn btn-info">Save</button>
-                                <a href="{{ request.route_url('admin_users') }}" class="btn btn-secondary">Cancel</a>
+                                <a href="{{ request.route_url('user_profile', username=user.username) }}" class="btn btn-secondary">Cancel</a>
                                 </div>
 
                             </form>
