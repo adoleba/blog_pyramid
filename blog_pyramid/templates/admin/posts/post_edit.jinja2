@@ -6,34 +6,16 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Edit post {{ post.title }}</h4>
-                        <div class="row">
-                            <form action="{{request.route_url('post_edit', slug=slug)}}" method="post" class="form" enctype="multipart/form-data">
+                    <h4 class="card-title">Edit post "{{ post.title }}"</h4>
+                    <div class="row">
+                        <form class="m-t-80" method="POST" enctype="application/x-www-form-urlencoded">
+                            <div class="row">
 
-                                {% for error in form.intro.errors %}
-                                    <div class="error">{{ error }}</div>
-                                {% endfor %}
-                                <div class="form-group">
-                                    <label for="intro">{{form.intro.label}}</label>
-                                    {{form.intro(class_='form-control')}}
-                                </div>
+                                {{ form | safe }}
+                            </div>
 
-                                {% for error in form.body.errors %}
-                                    <div class="error">{{ error }}</div>
-                                {% endfor %}
-                                <div class="form-group">
-                                    <label for="body">{{form.body.label}}</label>
-                                    {{form.body(class_='form-control')}}
-                                </div>
-
-                                <div class="form-group">
-                                <label></label>
-                                <button type="submit" class="btn btn-info">Save</button>
-                                <a href="{{ request.route_url('admin_categories') }}" class="btn btn-secondary">Cancel</a>
-                                </div>
-
-                            </form>
-                        </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

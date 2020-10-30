@@ -6,10 +6,9 @@ from deform import Form, ValidationFailure
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember, forget
 from pyramid.view import view_config, forbidden_view_config
-from slugify import slugify
 
 from blog_pyramid.forms.category import CategoryCreateForm, validate_unique_name, CategoryEditForm
-from blog_pyramid.forms.post import get_post_form, validate_unique_title, PostEditForm
+from blog_pyramid.forms.post import get_post_form, validate_unique_title, get_edit_post_form
 from blog_pyramid.forms.user import get_user_register_form, UserEditForm, get_user_email_edit_form, LoginForm
 from blog_pyramid.models import Post, User
 from blog_pyramid.models.category import Category
@@ -56,6 +55,13 @@ class PostsViews:
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
         return Form(post_create_form, buttons=(submit, cancel))
 
+    @property
+    def post_edit_form(self):
+        post_edit_form = get_edit_post_form(self.request.dbsession)
+        submit = deform.Button(name='Save', css_class='btn btn-info')
+        cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
+        return Form(post_edit_form, buttons=(submit, cancel))
+
     @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2', permission='user')
     def admin_posts(self):
         title = 'Posts list'
@@ -94,21 +100,32 @@ class PostsViews:
 
     @view_config(route_name='post_edit', renderer='../templates/admin/posts/post_edit.jinja2', permission='user')
     def post_edit(self):
-        form = PostEditForm(self.request.POST)
         slug = self.request.matchdict['slug']
         post = self.request.dbsession.query(Post).filter_by(slug=slug).one()
-        form.intro.data = post.intro
-        form.body.data = post.body
+        post_as_dict = post.__dict__
+        form = self.post_edit_form.render(appstruct=post_as_dict)
 
-        if self.request.method == "POST" and form.validate():
+        if 'Save' in self.request.params:
             new_post_intro = self.request.params.get('intro')
             new_post_body = self.request.params.get('body')
+            new_post_category = self.request.params.get('category')
+            controls = self.request.POST.items()
             edited = datetime.datetime.utcnow()
-            self.request.dbsession.query(Post).filter(Post.slug == slug) \
-            .update({'intro': new_post_intro, 'body': new_post_body, 'edited': edited})
+            form_to_validate = self.post_edit_form
 
-            url = self.request.route_url('admin_posts')
-            return HTTPFound(location=url)
+            try:
+                form_to_validate.validate(controls)
+                self.request.dbsession.query(Post).filter(Post.slug == slug) \
+                .update({'intro': new_post_intro, 'body': new_post_body, 'category': new_post_category, 'edited': edited})
+
+                url = self.request.route_url('admin_posts')
+                return HTTPFound(location=url)
+
+            except ValidationFailure as e:
+                return {'form': e.render(), 'post': post}
+
+        if 'Cancel' in self.request.params:
+            return HTTPFound(location=self.request.route_url('admin_posts'))
 
         return {'form': form, 'post': post}
 

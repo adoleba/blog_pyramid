@@ -31,6 +31,15 @@ def get_post_form(dbsession, validator):
     return PostForm(validator=validator)
 
 
-class PostEditForm(Form):
-    intro = TextAreaField('Intro', [validators.Length(min=10, max=200)])
-    body = TextAreaField('Body', [validators.Length(min=10, max=200)])
+def get_edit_post_form(dbsession):
+    class PostEditForm(colander.MappingSchema):
+        intro = colander.SchemaNode(colander.String(), title="Intro", widget=deform.widget.TextAreaWidget(),
+                                    validator=colander.Length(min=10, max=200))
+        body = colander.SchemaNode(colander.String(), title="Treść", widget=deform.widget.RichTextWidget(),
+                                   validator=colander.Length(min=50))
+        category = colander.SchemaNode(
+            colander.String(),
+            title="Kategoria",
+            widget=deform.widget.SelectWidget(values=get_categories(dbsession)),
+        )
+    return PostEditForm()
