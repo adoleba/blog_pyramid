@@ -13,6 +13,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+                {% if posts.count() >0 %}
                     <a href="{{ request.route_url('admin_categories') }}" class="btn btn-info btn-rounded m-t-10 float-right">Go back</a>
 
                     <div class="table-responsive">
@@ -55,6 +56,11 @@
                         </table>
 
                     </div>
+                {% else %}
+                    <p>No posts</p>
+                    <a href="{{ request.route_url('post_create') }}" class="btn btn-info btn-rounded m-t-10">Add New Post</a>
+                    <a href="{{ request.route_url('admin_categories') }}" class="btn btn-secondary btn-rounded m-t-10">Go back</a>
+                {% endif %}
                 </div>
             </div>
         </div>
