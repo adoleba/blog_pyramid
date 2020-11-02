@@ -1,0 +1,75 @@
+{% extends  "../base.jinja2" %}
+
+{% block content %}
+
+
+    <div class="row page-titles">
+        <div class="col-md-12">
+            <h4>{{ title }}</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a href="{{ request.route_url('post_create') }}" class="btn btn-info btn-rounded m-t-10 float-right">Add New Post</a>
+
+                    <div class="table-responsive">
+
+                        {% if role == 'admin'%}
+                            <a href="{{ request.route_url('admin_own_posts', username=username) }}">Show only my posts</a>
+                        {% endif %}
+
+                        {% if paginator.items %}
+                            <table id="demo-foo-addrow" class="table table-bordered m-t-30 table-hover contact-list" style="width: 100%">
+
+                                <colgroup>
+                                    <col span="1" style="width: 30%;">
+                                    <col span="1" style="width: 14%;">
+                                    <col span="1" style="width: 14%;">
+                                    <col span="1" style="width: 8%;">
+                                    <col span="1" style="width: 7%;">
+                                    <col span="1" style="width: 27%;">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <td>Title</td>
+                                        <td>Created</td>
+                                        <td>Edited</td>
+                                        <td>Author</td>
+                                        <td>Category</td>
+                                        <td>Action</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for post in paginator.items %}
+                                    <tr>
+                                        <td>{{ post.title }}</td>
+                                        <td>{{ post.created.strftime('%Y-%m-%d')}}</td>
+                                        <td>{{ post.edited.strftime('%Y-%m-%d')}}</td>
+                                        <td>{{ post.author}}</td>
+                                        <td>{{ post.category }}</td>
+                                    <td>
+                                        <a href="{{ request.route_url('post_edit', slug=post.slug) }}" class="btn btn-sm btn-dark">Edit</a>
+                                        <a href="{{ request.route_url('post_delete', slug=post.slug) }}" class="btn btn-sm btn-danger">Delete</a>
+                                        <a href="#" class="btn btn-sm btn-success">Preview</a>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+
+                            {{ paginator.pager() |safe }}
+
+                        {% else %}
+                            <p>No posts found.</p>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends  "../base.jinja2" %}
+
+{% block content %}
+
+
+    <div class="row page-titles">
+        <div class="col-md-12">
+            <h4>{{ title }}</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <p>Delete post "{{ post.title }}"?</p>
+                    <a href="{{ request.route_url('post_delete_confirmed', slug=post.slug) }}" class="btn btn-danger">Confirm</a>
+                    <a href="{{ request.route_url('admin_posts') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

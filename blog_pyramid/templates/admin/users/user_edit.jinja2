@@ -1,0 +1,59 @@
+{% extends  "../base.jinja2" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ title }}</h4>
+                        <div class="row">
+                            <form action="{{request.route_url('user_edit', username=user.username)}}" method="post" class="form" enctype="multipart/form-data">
+
+                                {% for error in form.firstname.errors %}
+                                    <div class="error">{{ error }}</div>
+                                {% endfor %}
+                                <div class="form-group">
+                                    <label for="firstname">{{form.firstname.label}}</label>
+                                    {{form.firstname(class_='form-control')}}
+                                </div>
+
+                                {% for error in form.lastname.errors %}
+                                    <div class="error">{{ error }}</div>
+                                {% endfor %}
+                                <div class="form-group">
+                                    <label for="lastname">{{form.lastname.label}}</label>
+                                    {{form.lastname(class_='form-control')}}
+                                </div>
+
+                                {% for error in form.about.errors %}
+                                    <div class="error">{{ error }}</div>
+                                {% endfor %}
+                                <div class="form-group">
+                                    <label for="about">{{form.about.label}}</label>
+                                    {{form.about(class_='form-control')}}
+                                </div>
+
+                                {% if role =='admin' %}
+                                    <div class="form-group">
+                                        <label for="role">{{form.role.label}}</label>
+                                        {{form.role(class_='form-control')}}
+                                    </div>
+                                {% endif %}
+
+                                <div class="form-group">
+                                <label></label>
+                                <button type="submit" class="btn btn-info">Save</button>
+                                <a href="{{ request.route_url('user_profile', username=user.username) }}" class="btn btn-secondary">Cancel</a>
+                                </div>
+
+                            </form>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

@@ -152,3 +152,60 @@ p {
     margin-top: 20px;
   }
 }
+
+.custom-side-mini-panel {
+	 width: 240px;
+	 position: fixed;
+	 left: 0px;
+	 height: 100%;
+	 background: white;
+     font-weight: 500;
+	 top: 66px;
+	 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+	 z-index: 8;
+}
+ .custom-side-mini-panel ul.mini-nav {
+	 height: 100%;
+	 margin: 0px;
+	 padding: 0px 0 140px 0;
+	 display: inline-block;
+}
+ .custom-side-mini-panel ul.mini-nav > li {
+	 list-style: none;
+	 display: block;
+}
+ .custom-side-mini-panel ul.mini-nav > li > a {
+	 padding: 15px 0px 14px;
+	 display: block;
+	 width: 240px;
+	 font-size: 18px;
+	 color: black;
+	 text-align: center;
+	 border-left: 3px solid transparent;
+	 border-top: 1px solid white;
+}
+ .custom-side-mini-panel ul.mini-nav > li:hover > a, .side-mini-panel ul.mini-nav > li.selected > a {
+	 border-left: 3px solid #fb9678;
+     color: #fb9678;
+     background-color: white;
+}
+
+ .custom-side-mini-panel ul.mini-nav > li .sidebarmenu {
+	 padding: 0px;
+	 position: absolute;
+	 height: 100%;
+	 width: 240px;
+	 background: white;
+	 top: 0px;
+	 display: none;
+}
+ .custem-side-mini-panel ul.mini-nav > li.selected .sidebarmenu {
+	 display: block;
+}
+ .custom-side-mini-panel ul.mini-nav > li.selected.cnt-none .sidebarmenu {
+	 display: none;
+}
+
+ .error {
+  color: darkred
+ }

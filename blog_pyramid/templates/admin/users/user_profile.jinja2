@@ -1,0 +1,98 @@
+{% extends  "../base.jinja2" %}
+
+{% block content %}
+
+    <div class="row page-titles">
+        <div class="col-md-12">
+            <h4>Profile user "{{ user.username }}"</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-body">
+                        <h3 class="card-title">Person Info</h3>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Username:</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                {{user.username}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Firstname:</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                {{user.firstname}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Lastname:</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                {{user.lastname}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Email:</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                {{user.email}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>About:</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                    {{user.about}}
+                            </div>
+                        </div>
+
+                        {% if role =='admin' %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p>Role:</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                        {{user.role}}
+                                </div>
+                            </div>
+                        {% endif%}
+
+                        <hr>
+
+                        <a href="{{ request.route_url('user_edit', username=user.username) }}" class="btn btn-sm btn-dark">Change person data</a>
+                        <a href="{{ request.route_url('user_email_edit', username=user.username) }}" class="btn btn-sm btn-danger">Change email</a>
+                        <a href="{{ request.route_url('user_password_edit', username=user.username) }}" class="btn btn-sm btn-info">Change password</a>
+                        {% if role =='admin' %}
+                            <a href="{{ request.route_url('admin_users') }}" class="btn btn-sm btn-success">Users list</a>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

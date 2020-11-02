@@ -16,12 +16,6 @@ def my_view(request):
     return {'one': one, 'project': 'blog_pyramid'}
 
 
-@view_config(route_name='admin', renderer='../templates/admin.jinja2')
-def admin(request):
-    title = 'Admin panel'
-    return {'title': title}
-
-
 db_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
 might be caused by one of the following things:

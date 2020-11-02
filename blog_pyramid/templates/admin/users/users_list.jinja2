@@ -1,0 +1,53 @@
+{% extends  "../base.jinja2" %}
+
+{% block content %}
+
+    <div class="row page-titles">
+        <div class="col-md-12">
+            <h4>{{ title }}</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <a href="{{ request.route_url('user_register') }}" class="btn btn-info btn-rounded m-t-10 float-right">Register new user</a>
+
+                    <div class="table-responsive">
+                    <table id="demo-foo-addrow" class="table table-bordered m-t-30 table-hover contact-list" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <td>Username</td>
+                                <td>Email</td>
+                                <td>Firstname</td>
+                                <td>Lastname</td>
+                                <td>Created</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.firstname }}</td>
+                                <td>{{ user.lastname }}</td>
+                                <td>{{ user.created.strftime('%Y-%m-%d')}}</td>
+                                <td>
+                                    <a href="{{ request.route_url('user_profile', username=user.username) }}" class="btn btn-sm btn-dark">Profile</a>
+                                    <a href="{{ request.route_url('user_posts', username=user.username) }}" class="btn btn-sm btn-dark">Posts</a>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

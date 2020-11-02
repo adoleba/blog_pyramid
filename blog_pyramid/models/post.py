@@ -1,11 +1,9 @@
 import datetime
 
 from slugify import slugify
-from sqlalchemy.orm import relationship
 
 from blog_pyramid.models.meta import Base
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from blog_pyramid.models.category import posts_categories
+from sqlalchemy import Column, Integer, String, DateTime
 
 
 class Post(Base):
@@ -17,9 +15,13 @@ class Post(Base):
     created = Column(DateTime, default=datetime.datetime.utcnow)
     edited = Column(DateTime, default=datetime.datetime.utcnow)
     slug = Column(String(40), unique=True)
-    author = relationship('User', back_populates='posts')
-    author_username = Column(String, ForeignKey('user.username'))
-    categories = relationship('Category', secondary=posts_categories, back_populates='posts')
+    category = Column(String(30))
+    author = Column(String(30))
 
-    def __init__(self, title):
+    def __init__(self, title, intro, body, category, author):
         self.slug = slugify(title)
+        self.title = title
+        self.intro = intro
+        self.body = body
+        self.category = category
+        self.author = author
