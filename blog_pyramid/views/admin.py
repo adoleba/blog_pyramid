@@ -21,8 +21,7 @@ from blog_pyramid.services.users import UserService
 
 @view_config(route_name='admin', renderer='../templates/admin/base.jinja2', permission='user')
 def admin(request):
-    title = 'Admin panel'
-    return {'title': title}
+    return HTTPFound(location=request.route_url('admin_posts'))
 
 
 @view_config(route_name='login', renderer='../templates/admin/login.jinja2', permission='view')
@@ -308,18 +307,20 @@ class UserViews:
             form.lastname.data = self.user.lastname
             form.firstname.data = self.user.firstname
             form.about.data = self.user.about
+            form.role.data = self.user.role
 
             if self.request.method == "POST" and form.validate():
                 new_lastname = self.request.params.get('lastname')
                 new_about = self.request.params.get('about')
                 new_firstname = self.request.params.get('firstname')
+                new_role = self.request.params.get('role')
 
                 self.request.dbsession.query(User).filter(User.username == self.username) \
-                    .update({'firstname': new_firstname, 'lastname': new_lastname, 'about': new_about})
+                    .update({'firstname': new_firstname, 'lastname': new_lastname, 'about': new_about, 'role': new_role})
 
                 return HTTPFound(location=self.request.route_url('user_profile', username=self.username))
 
-            return {'title': title, 'form': form, 'user': self.user}
+            return {'title': title, 'form': form, 'user': self.user, 'role': self.logged_user.role}
         else:
             return HTTPForbidden()
 

@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, PasswordField, validators, TextAreaField, ValidationError
+from wtforms import Form, StringField, PasswordField, validators, TextAreaField, ValidationError, SelectField
 from blog_pyramid.models import User
 
 
@@ -27,6 +27,7 @@ class UserEditForm(Form):
     firstname = StringField('Firstname', [validators.Length(min=3, max=20)])
     lastname = StringField('Lastname', [validators.Length(min=3, max=20)])
     about = TextAreaField('About user', [validators.Length(min=10)])
+    role = SelectField("User's role", choices=[('admin', 'admin'), ('editor', 'editor')])
 
 
 def get_user_email_edit_form(postdata, dbsession):

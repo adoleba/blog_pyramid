@@ -66,6 +66,18 @@
                             </div>
                         </div>
 
+                        {% if role =='admin' %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p>Role:</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                        {{user.role}}
+                                </div>
+                            </div>
+                        {% endif%}
+
                         <hr>
 
                         <a href="{{ request.route_url('user_edit', username=user.username) }}" class="btn btn-sm btn-dark">Change person data</a>

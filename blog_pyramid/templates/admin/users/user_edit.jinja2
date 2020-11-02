@@ -34,6 +34,13 @@
                                     {{form.about(class_='form-control')}}
                                 </div>
 
+                                {% if role =='admin' %}
+                                    <div class="form-group">
+                                        <label for="role">{{form.role.label}}</label>
+                                        {{form.role(class_='form-control')}}
+                                    </div>
+                                {% endif %}
+
                                 <div class="form-group">
                                 <label></label>
                                 <button type="submit" class="btn btn-info">Save</button>
