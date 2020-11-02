@@ -14,18 +14,18 @@
             <div class="card">
                 <div class="card-body">
                 {% if posts.count() >0 %}
-                    <a href="{{ request.route_url('admin_users') }}" class="btn btn-info btn-rounded m-t-10 float-right">Go back</a>
+                    <a href="{{ back_url }}" class="btn btn-info btn-rounded m-t-10 float-right">Go back</a>
 
                     <div class="table-responsive">
                         <table id="demo-foo-addrow" class="table table-bordered m-t-30 table-hover contact-list" style="width: 100%">
 
                             <colgroup>
                                 <col span="1" style="width: 30%;">
-                                <col span="1" style="width: 15%;">
-                                <col span="1" style="width: 15%;">
-                                <col span="1" style="width: 10%;">
-                                <col span="1" style="width: 10%;">
-                                <col span="1" style="width: 20%;">
+                                <col span="1" style="width: 14%;">
+                                <col span="1" style="width: 14%;">
+                                <col span="1" style="width: 8%;">
+                                <col span="1" style="width: 7%;">
+                                <col span="1" style="width: 27%;">
                             </colgroup>
                             <thead>
                                 <tr>
@@ -48,6 +48,7 @@
                                 <td>
                                     <a href="{{ request.route_url('post_edit', slug=post.slug) }}" class="btn btn-sm btn-dark">Edit</a>
                                     <a href="{{ request.route_url('post_delete', slug=post.slug) }}" class="btn btn-sm btn-danger">Delete</a>
+                                    <a href="#" class="btn btn-sm btn-success">Preview</a>
 
                                 </tr>
                             {% endfor %}

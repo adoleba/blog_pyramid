@@ -84,10 +84,15 @@ class PostsViews:
 
     @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2', permission='user')
     def admin_posts(self):
-        title = 'Posts list'
         page = int(self.request.params.get('page', 1))
         paginator = PostService.get_paginator(request=self.request, page=page)
-        return {'title': title, 'paginator': paginator}
+        return {'paginator': paginator, 'username': self.logged_user.username, 'role': self.logged_user.role}
+
+    @view_config(route_name='admin_own_posts', renderer='../templates/admin/users/user_posts_list.jinja2', permission='admin')
+    def admin_own_posts(self):
+        posts = PostService.by_user(self.request, username=self.logged_user.username)
+        back_url = '/admin/posts'
+        return {'posts': posts, 'username': self.logged_user.username, 'back_url': back_url}
 
     @view_config(route_name='post_create', renderer='../templates/admin/posts/post_create.jinja2', permission='user')
     def post_create(self):
@@ -301,7 +306,8 @@ class UserViews:
                  permission='admin')
     def user_posts(self):
         posts = PostService.by_user(self.request, username=self.username)
-        return {'posts': posts, 'username': self.username}
+        back_url = '/admin/users'
+        return {'posts': posts, 'username': self.username, 'back_url': back_url}
 
     @view_config(route_name='user_profile', renderer='../templates/admin/users/user_profile.jinja2', permission='user')
     def user_profile(self):

@@ -6,6 +6,7 @@ def includeme(config):
     config.add_route('login', '/admin/login')
     config.add_route('logout', '/admin/logout')
     config.add_route('admin_posts', '/admin/posts')
+    config.add_route('admin_own_posts', '/admin/{username}/posts')
     config.add_route('admin_categories', '/admin/categories')
     config.add_route('admin_users', '/admin/users')
     # categories
