@@ -42,3 +42,8 @@ def get_user_email_edit_form(postdata, dbsession):
 class LoginForm(Form):
     email = StringField('Email', [validators.Email()])
     password = PasswordField('Password')
+
+
+class ChangePasswordForm(Form):
+    password = PasswordField('Password', [validators.Length(min=3), validators.EqualTo('password2', 'Passwords must match')])
+    password2 = PasswordField('Repeat Password')

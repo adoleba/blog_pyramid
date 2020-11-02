@@ -3,13 +3,15 @@ from functools import partial
 
 import deform
 from deform import Form, ValidationFailure
+from passlib.apps import custom_app_context as user_pwd_context
 from pyramid.httpexceptions import HTTPFound, HTTPForbidden
 from pyramid.security import remember, forget
 from pyramid.view import view_config, forbidden_view_config
 
 from blog_pyramid.forms.category import CategoryCreateForm, validate_unique_name, CategoryEditForm
 from blog_pyramid.forms.post import get_post_form, validate_unique_title, get_edit_post_form
-from blog_pyramid.forms.user import get_user_register_form, UserEditForm, get_user_email_edit_form, LoginForm
+from blog_pyramid.forms.user import get_user_register_form, UserEditForm, get_user_email_edit_form, LoginForm, \
+    ChangePasswordForm
 from blog_pyramid.models import Post, User
 from blog_pyramid.models.category import Category
 from blog_pyramid.services.categories import CategoryService
@@ -275,12 +277,6 @@ class UserViews:
         users = UserService.all(request=self.request)
         return {'title': title, 'users': users}
 
-    @view_config(route_name='user_posts', renderer='../templates/admin/users/user_posts_list.jinja2',
-                 permission='admin')
-    def user_posts(self):
-        posts = PostService.by_user(self.request, username=self.username)
-        return {'posts': posts, 'username': self.username}
-
     @view_config(route_name='user_register', renderer='../templates/admin/users/user_register.jinja2', permission='admin')
     def user_register(self):
         title = 'Register new user'
@@ -292,6 +288,16 @@ class UserViews:
             self.request.dbsession.add(new_user)
             return HTTPFound(location=self.request.route_url('admin_users'))
         return {'title': title, 'form': form}
+
+    @view_config(route_name='user_posts', renderer='../templates/admin/users/user_posts_list.jinja2',
+                 permission='admin')
+    def user_posts(self):
+        posts = PostService.by_user(self.request, username=self.username)
+        return {'posts': posts, 'username': self.username}
+
+    @view_config(route_name='user_profile', renderer='../templates/admin/users/user_profile.jinja2', permission='user')
+    def user_profile(self):
+        return {'username': self.username, 'user': self.user, 'role': self.logged_user.role}
 
     @view_config(route_name='user_edit', renderer='../templates/admin/users/user_edit.jinja2', permission='user')
     def user_edit(self):
@@ -336,9 +342,24 @@ class UserViews:
         else:
             return HTTPForbidden()
 
-    @view_config(route_name='user_profile', renderer='../templates/admin/users/user_profile.jinja2', permission='user')
-    def user_profile(self):
-        return {'username': self.username, 'user': self.user,  'role': self.logged_user.role}
+    @view_config(route_name='user_password_edit', renderer='../templates/admin/users/user_edit_password.jinja2',
+                 permission='user')
+    def user_password_edit(self):
+        if self.logged_user.role == 'admin' or self.request.authenticated_userid == self.username:
+            form = ChangePasswordForm(self.request.POST)
+
+            if self.request.method == "POST" and form.validate():
+
+                password_hash = user_pwd_context.encrypt(form.password.data.encode('utf8'))
+
+                self.request.dbsession.query(User).filter(User.username == self.username) \
+                .update({'password': password_hash})
+
+                return HTTPFound(location=self.request.route_url('user_profile', username=self.username))
+
+            return {'form': form, 'user': self.user}
+        else:
+            return HTTPForbidden()
 
 
 @forbidden_view_config()

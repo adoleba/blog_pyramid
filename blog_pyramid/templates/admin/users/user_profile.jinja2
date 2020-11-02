@@ -70,7 +70,7 @@
 
                         <a href="{{ request.route_url('user_edit', username=user.username) }}" class="btn btn-sm btn-dark">Change person data</a>
                         <a href="{{ request.route_url('user_email_edit', username=user.username) }}" class="btn btn-sm btn-danger">Change email</a>
-                        <a href="#" class="btn btn-sm btn-info">Change password</a>
+                        <a href="{{ request.route_url('user_password_edit', username=user.username) }}" class="btn btn-sm btn-info">Change password</a>
                         {% if role =='admin' %}
                             <a href="{{ request.route_url('admin_users') }}" class="btn btn-sm btn-success">Users list</a>
                         {% endif %}
