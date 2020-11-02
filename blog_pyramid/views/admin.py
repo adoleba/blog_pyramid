@@ -51,7 +51,11 @@ class PostsViews:
 
     @property
     def post_create_form(self):
-        post_create_form = get_post_form(self.request.dbsession, validator=partial(validate_unique_title, dbsession=self.request.dbsession)).bind(request=self.request)
+        post_create_form = get_post_form(
+            self.request.dbsession,
+            validator=partial(validate_unique_title,
+            dbsession=self.request.dbsession),
+            user_role=self.logged_user.role).bind(request=self.request)
         submit = deform.Button(name='Save', css_class='btn btn-info')
         cancel = deform.Button(name='Cancel', css_class='btn btn-inverse')
         return Form(post_create_form, buttons=(submit, cancel))
@@ -99,8 +103,13 @@ class PostsViews:
 
             try:
                 form.validate(controls)
+                if self.logged_user.role != 'admin':
+                    author = self.request.user.username
+                else:
+                    author = self.request.params.get('author')
+
                 new_post = Post(title=post_title, intro=post_intro, body=post_body, category=post_category,
-                                author=self.request.user.username)
+                                author=author)
                 self.request.dbsession.add(new_post)
 
                 url = self.request.route_url('admin_posts')
