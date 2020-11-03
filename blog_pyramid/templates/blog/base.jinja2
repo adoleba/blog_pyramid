@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ request.static_url('blog_pyramid:static/assets/images/favicon.png') }}">
+
+    <title>Elite Admin Template - The Ultimate Multipurpose admin template</title>
+    <link href="{{ request.static_url('blog_pyramid:static/theme.css')}}" rel="stylesheet">
+    <link href="{{ request.static_url('blog_pyramid:static/css/style.min.css')}}" rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="main-wrapper">
+
+        {% include 'header.html' %}
+
+        <div class="container-fluid">
+
+                {% block content %}
+                {% endblock %}
+
+        </div>
+        {% include 'footer.html' %}
+
+    </div>
+
+</body>
+</html>
