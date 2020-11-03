@@ -2,15 +2,14 @@
     <div class="fix-width">
         <div class="header">
             <nav class="navbar navbar-expand-md navbar-light bg-white">
-                <a class="navbar-brand" href="#">logo</a>
+                <a class="navbar-brand" href="{{request.route_url('index')}}">logo</a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Features</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Documentation</a>
-                        </li>
+                        {% for category in categories %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">{{ category.name }}</a>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </div>
             </nav>

@@ -1,0 +1,15 @@
+{% extends  "./base.jinja2" %}
+
+{% block content %}
+
+    <ul class="list-inline font-14">
+        <li class="p-l-0">| {{ post.created.strftime("%u.%m.%Y") }} | </li>
+        <li><a href="#" class="link"> | {{ post.author }} | </a></li>
+        <li><a href="#" class="link"> | {{ post.category }} |</a></li>
+    </ul>
+    <h3 class="font-normal">{{ post.title }}</h3>
+    <p class="m-b-0 m-t-10">{{ post.intro }}</p>
+
+
+{% endblock %}
+
