@@ -3,6 +3,7 @@ def includeme(config):
     #blog
     config.add_route('index', '/')
     config.add_route('post_page', '/{slug}')
+    config.add_route('blog_category_posts', 'posts/{category_slug}')
 
     # admin - main
     config.add_route('admin', '/admin')
