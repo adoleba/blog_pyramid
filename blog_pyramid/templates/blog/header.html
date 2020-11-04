@@ -7,7 +7,7 @@
                     <ul class="navbar-nav ml-auto">
                         {% for category in categories %}
                             <li class="nav-item">
-                                <a class="nav-link" href="#">{{ category.name }}</a>
+                                <a class="nav-link" href="{{ request.route_url('blog_category_posts', category_slug=category.slug) }}">{{ category.name }}</a>
                             </li>
                         {% endfor %}
                     </ul>
