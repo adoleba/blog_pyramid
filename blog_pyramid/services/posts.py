@@ -44,3 +44,7 @@ class PostServiceBlog:
     @classmethod
     def by_category(cls, request, category):
         return request.dbsession.query(Post).filter(Post.category == category).order_by(Post.created.desc())
+
+    @classmethod
+    def by_user(cls, request, username):
+        return request.dbsession.query(Post).filter(Post.author == username).order_by(Post.created.desc())

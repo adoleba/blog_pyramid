@@ -19,7 +19,7 @@
                     <div class="card-body">
                         <ul class="list-inline font-14">
                             <li class="p-l-0">| {{ post.created.strftime("%u.%m.%Y") }} | </li>
-                            <li><a href="#" class="link"> | {{ post.author }} | </a></li>
+                            <li><a href="{{ request.route_url('blog_user_posts', username=post.author) }}" class="link"> | {{ post.author }} | </a></li>
                             <li><a href="{{ request.route_url('blog_category_posts', category_slug=post.category|get_slug) }}" class="link"> | {{ post.category }} |</a></li>
                         </ul>
                         <h3 class="font-normal">{{ post.title }}</h3>
