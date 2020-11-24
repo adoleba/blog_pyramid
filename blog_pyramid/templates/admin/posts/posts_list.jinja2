@@ -60,7 +60,8 @@
                                 </tbody>
                             </table>
 
-                            {{ paginator.pager() |safe }}
+                            {{ paginator.pager(link_attr={ 'class':'btn btn-secondary' },
+                            curpage_attr={ 'class':'btn btn-primary' }) | safe }}
 
                         {% else %}
                             <p>No posts found.</p>
