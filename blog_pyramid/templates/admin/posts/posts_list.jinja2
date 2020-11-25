@@ -53,14 +53,15 @@
                                     <td>
                                         <a href="{{ request.route_url('post_edit', slug=post.slug) }}" class="btn btn-sm btn-dark">Edit</a>
                                         <a href="{{ request.route_url('post_delete', slug=post.slug) }}" class="btn btn-sm btn-danger">Delete</a>
-                                        <a href="#" class="btn btn-sm btn-success">Preview</a>
+                                        <a href="{{ request.route_url('post_page', slug=post.slug) }}" class="btn btn-sm btn-success">Preview</a>
                                     </tr>
                                 {% endfor %}
 
                                 </tbody>
                             </table>
 
-                            {{ paginator.pager() |safe }}
+                            {{ paginator.pager(link_attr={ 'class':'btn btn-secondary' },
+                            curpage_attr={ 'class':'btn btn-primary' }) | safe }}
 
                         {% else %}
                             <p>No posts found.</p>

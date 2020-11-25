@@ -1,0 +1,49 @@
+{% extends  "./base.jinja2" %}
+
+{% block content %}
+
+    <div class="row p-5">
+        <div class="col-md-12">
+            <div class="fix-width banner-part text-center">
+                <div class="min-h">
+                    <h1 class="banner-title">{{ title }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if posts.items %}
+
+            {% for post in posts.items %}
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="list-inline font-14">
+                                <li class="p-l-0">| {{ post.created.strftime("%u.%m.%Y") }} | </li>
+                                <li><a href="{{ request.route_url('blog_user_posts', username=post.author) }}" class="link"> | {{ post.author }} | </a></li>
+                                <li><a href="{{ request.route_url('blog_category_posts', category_slug=post.category|get_slug) }}" class="link"> | {{ post.category }} |</a></li>
+                            </ul>
+                            <h3 class="font-normal">{{ post.title }}</h3>
+                            <p class="m-b-0 m-t-10">{{ post.intro }}</p>
+                            <a href="{{ request.route_url('post_page', slug=post.slug) }}" class="btn btn-success btn-rounded waves-effect waves-light m-t-20">Read</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="col-md-12 text-center">
+            {{ posts.pager(link_attr={ 'class':'btn btn-secondary' },
+                                curpage_attr={ 'class':'btn btn-success' }) | safe }}
+            </div>
+
+        {% else %}
+            <div class="col-md-12 text-center">
+                <p>No posts found.</p>
+            </div>
+        {% endif %}
+
+
+    </div>
+
+{% endblock %}
+

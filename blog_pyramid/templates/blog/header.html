@@ -1,0 +1,18 @@
+<div class="navbar-fixed">
+    <div class="fix-width">
+        <div class="header">
+            <nav class="navbar navbar-expand-md navbar-light bg-white">
+                <a class="navbar-brand" href="{{request.route_url('index')}}">Home</a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        {% for category in categories %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ request.route_url('blog_category_posts', category_slug=category.slug) }}">{{ category.name }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+{% extends  "./base.jinja2" %}
+
+{% block content %}
+
+    <div class="row page-titles">
+        <div class="col-md-12 text-center">
+            <h4><strong>{{ post.title }}</strong></h4>
+
+            <p class="mt-2">
+                <span style="color: #fb9678">{{ post.created.strftime("%u.%m.%Y") }}</span>  &bull;
+                <a href="{{ request.route_url('blog_user_posts', username=post.author) }}"> {{ post.author }} </a> &bull;
+                <a href="{{ request.route_url('blog_category_posts', category_slug=post.category|get_slug) }}">{{ post.category }}</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center text-center">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title pb-3" id="1">{{ post.intro }}</h4>
+                    <p>{{ post.body | safe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
