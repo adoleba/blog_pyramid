@@ -1,9 +1,9 @@
 import datetime
 
 from slugify import slugify
+from sqlalchemy import Column, Integer, String, DateTime
 
 from blog_pyramid.models.meta import Base
-from sqlalchemy import Column, Integer, String, DateTime
 
 
 class Post(Base):

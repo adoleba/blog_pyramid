@@ -1,7 +1,7 @@
 import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime
 from passlib.apps import custom_app_context as user_pwd_context
+from sqlalchemy import Column, Integer, String, DateTime
 
 from blog_pyramid.models.meta import Base
 

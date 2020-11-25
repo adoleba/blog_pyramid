@@ -1,7 +1,6 @@
 import colander
 import deform.widget
 from slugify import slugify
-from wtforms import Form, TextAreaField, validators
 
 from blog_pyramid.models import Post, User
 from blog_pyramid.models.category import Category

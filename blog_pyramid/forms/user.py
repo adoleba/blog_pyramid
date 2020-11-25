@@ -1,4 +1,5 @@
 from wtforms import Form, StringField, PasswordField, validators, TextAreaField, ValidationError, SelectField
+
 from blog_pyramid.models import User
 
 
