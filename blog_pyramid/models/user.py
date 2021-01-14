@@ -11,7 +11,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(30), unique=True)
     email = Column(String(30), unique=True)
-    password = Column(String(30))
+    password = Column(String)
     about = Column(String(100))
     created = Column(DateTime, default=datetime.datetime.utcnow)
     firstname = Column(String(30))

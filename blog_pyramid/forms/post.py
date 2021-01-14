@@ -1,7 +1,6 @@
 import colander
 import deform.widget
 from slugify import slugify
-from wtforms import Form, TextAreaField, validators
 
 from blog_pyramid.models import Post, User
 from blog_pyramid.models.category import Category
@@ -24,9 +23,9 @@ def validate_unique_title(node, appstruct, dbsession):
 
 def get_post_form(dbsession, validator, user_role):
     class PostForm(colander.MappingSchema):
-        title = colander.SchemaNode(colander.String(), title="Tytuł", validator=colander.Length(min=3, max=60))
+        title = colander.SchemaNode(colander.String(), title="Tytuł", validator=colander.Length(min=3, max=30))
         intro = colander.SchemaNode(colander.String(), title="Intro", widget=deform.widget.TextAreaWidget(),
-                                    validator=colander.Length(min=10, max=200))
+                                    validator=colander.Length(min=10, max=100))
         body = colander.SchemaNode(colander.String(), title="Treść", widget=deform.widget.RichTextWidget(),
                                    validator=colander.Length(min=50))
         category = colander.SchemaNode(
@@ -47,7 +46,7 @@ def get_post_form(dbsession, validator, user_role):
 def get_edit_post_form(dbsession):
     class PostEditForm(colander.MappingSchema):
         intro = colander.SchemaNode(colander.String(), title="Intro", widget=deform.widget.TextAreaWidget(),
-                                    validator=colander.Length(min=10, max=200))
+                                    validator=colander.Length(min=10, max=100))
         body = colander.SchemaNode(colander.String(), title="Treść", widget=deform.widget.RichTextWidget(),
                                    validator=colander.Length(min=50))
         category = colander.SchemaNode(

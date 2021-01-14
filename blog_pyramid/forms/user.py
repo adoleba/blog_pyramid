@@ -12,20 +12,20 @@ def get_user_register_form(postdata, dbsession):
             raise ValidationError('Email already exists')
 
     class RegisterForm(Form):
-        username = StringField('Username', [validators.Length(min=3, max=20), validate_username])
+        username = StringField('Username', [validators.Length(min=3, max=30), validate_username])
         email = StringField('Email', [validators.Email(), validate_email])
         password = PasswordField('Password',
                                  [validators.Length(min=3), validators.EqualTo('password2', 'Passwords must match')])
         password2 = PasswordField('Repeat Password')
-        firstname = StringField('Firstname', [validators.Length(min=3, max=20)])
-        lastname = StringField('Lastname', [validators.Length(min=3, max=20)])
+        firstname = StringField('Firstname', [validators.Length(min=3, max=30)])
+        lastname = StringField('Lastname', [validators.Length(min=3, max=30)])
         about = TextAreaField('About user', [validators.Length(min=10)])
     return RegisterForm(postdata)
 
 
 class UserEditForm(Form):
-    firstname = StringField('Firstname', [validators.Length(min=3, max=20)])
-    lastname = StringField('Lastname', [validators.Length(min=3, max=20)])
+    firstname = StringField('Firstname', [validators.Length(min=3, max=30)])
+    lastname = StringField('Lastname', [validators.Length(min=3, max=30)])
     about = TextAreaField('About user', [validators.Length(min=10)])
     role = SelectField("User's role", choices=[('admin', 'admin'), ('editor', 'editor')])
 
