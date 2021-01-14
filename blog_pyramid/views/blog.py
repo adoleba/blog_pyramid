@@ -1,6 +1,6 @@
 from pyramid.view import view_config
 
-from blog_pyramid.models import Post, Category, User
+from blog_pyramid.models import Post, Category
 from blog_pyramid.services.categories import CategoryService
 from blog_pyramid.services.posts import PostServiceBlog
 

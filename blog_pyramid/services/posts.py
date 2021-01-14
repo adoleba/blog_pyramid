@@ -1,5 +1,6 @@
-from blog_pyramid.models.post import Post
 import paginate_sqlalchemy
+
+from blog_pyramid.models.post import Post
 
 
 class PostService:
