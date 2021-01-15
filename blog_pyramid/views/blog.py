@@ -1,7 +1,7 @@
 from pyramid.view import view_config
 
 from blog_pyramid.models import Post, Category
-from blog_pyramid.services.categories import CategoryService
+from blog_pyramid.services.categories import CategoryBlogService
 from blog_pyramid.services.posts import PostServiceBlog
 
 
@@ -21,7 +21,7 @@ class PostsViews:
 
     @property
     def categories(self):
-        categories = CategoryService.all(self.request)
+        categories = CategoryBlogService.all(self.request)
         return categories
 
     @property

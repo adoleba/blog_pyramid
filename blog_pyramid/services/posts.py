@@ -6,11 +6,7 @@ from blog_pyramid.models.post import Post
 class PostService:
 
     @classmethod
-    def all(cls, request):
-        return request.dbsession.query(Post).order_by(Post.created.desc())
-
-    @classmethod
-    def get_paginator(cls, request, page=1):
+    def all(cls, request, page=1):
         if request.user.role == 'admin':
             query = request.dbsession.query(Post).order_by(Post.created.desc())
         else:

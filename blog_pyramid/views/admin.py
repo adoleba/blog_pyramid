@@ -85,7 +85,7 @@ class PostsViews:
     @view_config(route_name='admin_posts', renderer='../templates/admin/posts/posts_list.jinja2', permission='user')
     def admin_posts(self):
         page = int(self.request.params.get('page', 1))
-        paginator = PostService.get_paginator(request=self.request, page=page)
+        paginator = PostService.all(request=self.request, page=page)
         return {'paginator': paginator, 'username': self.logged_user.username, 'role': self.logged_user.role}
 
     @view_config(route_name='admin_own_posts', renderer='../templates/admin/users/user_posts_list.jinja2', permission='admin')
@@ -192,7 +192,7 @@ class CategoriesViews:
     def admin_categories(self):
         title = 'Categories list'
         page = int(self.request.params.get('page', 1))
-        paginator = CategoryService.get_paginator(request=self.request, page=page)
+        paginator = CategoryService.all(request=self.request, page=page)
         return {'title': title, 'paginator': paginator}
 
     @view_config(route_name='category_posts', renderer='../templates/admin/categories/category_posts_list.jinja2',
