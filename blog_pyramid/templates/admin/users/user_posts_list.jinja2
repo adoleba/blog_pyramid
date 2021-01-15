@@ -48,7 +48,7 @@
                                 <td>
                                     <a href="{{ request.route_url('post_edit', slug=post.slug) }}" class="btn btn-sm btn-dark">Edit</a>
                                     <a href="{{ request.route_url('post_delete', slug=post.slug) }}" class="btn btn-sm btn-danger">Delete</a>
-                                    <a href="#" class="btn btn-sm btn-success">Preview</a>
+                                    <a href="{{ request.route_url('post_page', slug=post.slug) }}" class="btn btn-sm btn-success" target="_blank">Preview</a>
 
                                 </tr>
                             {% endfor %}
