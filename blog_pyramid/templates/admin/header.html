@@ -4,7 +4,7 @@
         <div class="navbar-collapse">
             <ul class="navbar-nav ml-auto my-lg-0">
                 <li class="nav-item dropdown u-pro">
-                    <span class="nav-link dropdown-toggle waves-effect waves-dark profile-pic">Hi {{request.authenticated_userid}}</span>
+                    <span class="nav-link dropdown-toggle waves-effect waves-dark profile-pic">Hi {{ request.authenticated_userid }}</span>
                     <a href="{{ request.route_url('user_profile', username=request.authenticated_userid) }}" class="nav-link dropdown-toggle waves-effect waves-dark profile-pic"><span class="hidden-md-down">My profile</span> </a>
                     <a href="{{ request.route_url('logout') }}" class="nav-link dropdown-toggle waves-effect waves-dark profile-pic"><span class="hidden-md-down">Log Out</span> </a>
                 </li>

@@ -2,7 +2,7 @@
     <div class="fix-width">
         <div class="header">
             <nav class="navbar navbar-expand-md navbar-light bg-white">
-                <a class="navbar-brand" href="{{request.route_url('index')}}">Home</a>
+                <a class="navbar-brand" href="{{ request.route_url('index') }}">Home</a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
                         {% for category in categories %}

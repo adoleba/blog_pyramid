@@ -36,5 +36,3 @@ def includeme(config):
     config.add_route('post_page', '/{slug}')
     config.add_route('blog_category_posts', 'posts/category/{category_slug}')
     config.add_route('blog_user_posts', 'posts/user/{username}')
-
-

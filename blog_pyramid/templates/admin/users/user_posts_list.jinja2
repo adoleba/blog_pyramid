@@ -13,7 +13,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                {% if posts.count() >0 %}
+                {% if posts.count() > 0 %}
                     <a href="{{ back_url }}" class="btn btn-info btn-rounded m-t-10 float-right">Go back</a>
 
                     <div class="table-responsive">
@@ -41,8 +41,8 @@
                             {% for post in posts %}
                                 <tr>
                                     <td>{{ post.title }}</td>
-                                    <td>{{ post.created.strftime('%Y-%m-%d')}}</td>
-                                    <td>{{ post.edited.strftime('%Y-%m-%d')}}</td>
+                                    <td>{{ post.created.strftime('%Y-%m-%d') }}</td>
+                                    <td>{{ post.edited.strftime('%Y-%m-%d') }}</td>
                                     <td>{{ post.author}}</td>
                                     <td>{{ post.category }}</td>
                                 <td>
