@@ -19,9 +19,14 @@ from blog_pyramid.services.posts import PostService
 from blog_pyramid.services.users import UserService
 
 
-@view_config(route_name='admin', renderer='../templates/admin/base.jinja2', permission='user')
-def admin(request):
-    return HTTPFound(location=request.route_url('admin_posts'))
+class AdminMainView:
+
+    def __init__(self, request):
+        self.request = request
+
+    @view_config(route_name='admin', renderer='../templates/admin/base.jinja2', permission='user')
+    def admin(self):
+        return HTTPFound(location=self.request.route_url('admin_posts'))
 
 
 @view_config(route_name='login', renderer='../templates/admin/login.jinja2', permission='view')
