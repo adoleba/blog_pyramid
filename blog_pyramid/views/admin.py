@@ -29,25 +29,29 @@ class AdminMainView:
         return HTTPFound(location=self.request.route_url('admin_posts'))
 
 
-@view_config(route_name='login', renderer='../templates/admin/login.jinja2', permission='view')
-def login(request):
-    title = 'Login'
-    form = LoginForm()
-    email = request.POST.get('email')
-    error = ''
-    if email:
-        user = UserService.by_email(email, request=request)
-        if user and user.verify_password(request.POST.get('password')):
-            headers = remember(request, user.username)
-            return HTTPFound(location=request.route_url('admin'), headers=headers)
-        error = 'Incorrect email or password'
-    return {'title': title, 'form': form, 'error': error}
+class AuthViews:
 
+    def __init__(self, request):
+        self.request = request
 
-@view_config(route_name='logout', permission='view')
-def logout(request):
-    headers = forget(request)
-    return HTTPFound(location=request.route_url('login'), headers=headers)
+    @view_config(route_name='login', renderer='../templates/admin/login.jinja2', permission='view')
+    def login(self):
+        title = 'Login'
+        form = LoginForm()
+        email = self.request.POST.get('email')
+        error = ''
+        if email:
+            user = UserService.by_email(email, request=self.request)
+            if user and user.verify_password(self.request.POST.get('password')):
+                headers = remember(self.request, user.username)
+                return HTTPFound(location=self.request.route_url('admin'), headers=headers)
+            error = 'Incorrect email or password'
+        return {'title': title, 'form': form, 'error': error}
+
+    @view_config(route_name='logout', permission='view')
+    def logout(self):
+        headers = forget(self.request)
+        return HTTPFound(location=self.request.route_url('login'), headers=headers)
 
 
 class PostsViews:
