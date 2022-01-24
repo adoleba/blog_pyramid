@@ -12,8 +12,9 @@ def setup_models(dbsession):
     Add or update models / fixtures in the database.
 
     """
-    model = models.mymodel.MyModel(name='one', value=1)
-    dbsession.add(model)
+    user = models.user.User(username='admin', email='ania.doleba@wp.pl', password='adminadmin', role='superuser')
+
+    dbsession.add(user)
 
 
 def parse_args(argv):
