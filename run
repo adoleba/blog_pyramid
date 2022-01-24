@@ -1,5 +1,4 @@
 #!/bin/bash
 set -e
-cd blog_pyramid
 python setup.py develop
 python runapp.py
