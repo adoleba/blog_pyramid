@@ -1,0 +1,6 @@
+[console_scripts]
+initialize_blog_pyramid_db = blog_pyramid.scripts.initialize_db:main
+
+[paste.app_factory]
+main = blog_pyramid:main
+
