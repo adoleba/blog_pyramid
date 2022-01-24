@@ -28,8 +28,11 @@ def run_migrations_offline():
 
 
 def run_migrations_online():
-    engine = engine_from_config(
-                config.get_section(config.config_ini_section), prefix='sqlalchemy.')
+    """Run migrations in 'online' mode.
+    In this scenario we need to create an Engine
+    and associate a connection with the context.
+    """
+    engine = engine_from_config(settings, prefix='sqlalchemy.')
 
     with engine.connect() as connection:
         context.configure(
@@ -37,8 +40,11 @@ def run_migrations_online():
                     target_metadata=target_metadata
                     )
 
+    try:
         with context.begin_transaction():
             context.run_migrations()
+    finally:
+        connection.close()
 
 
 if context.is_offline_mode():
