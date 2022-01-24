@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 python setup.py develop
-alembic -c production.ini#blog_pyramid revision --autogenerate -m "init"
-alembic -c production.ini#blog_pyramid  upgrade head
+alembic -c production.ini revision --autogenerate -m "init"
+alembic -c production.ini  upgrade head
 initialize_blog_pyramid_db development.ini
 python runapp.py
